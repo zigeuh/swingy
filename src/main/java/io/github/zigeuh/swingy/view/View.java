@@ -5,6 +5,7 @@ import io.github.zigeuh.swingy.model.Hero;
 import io.github.zigeuh.swingy.model.SaveSlot;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicComboBoxUI;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -48,6 +49,89 @@ public class View extends JFrame {
 		}
 
 		add(main, BorderLayout.CENTER);
+	}
+
+	public void drawCharacterCreation() {
+		JDialog dialog = new JDialog();
+		dialog.setSize(500, 500);
+		dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		dialog.setLocationRelativeTo(this.getContentPane());
+		dialog.setVisible(true);
+
+		JLabel title = new JLabel("Create your character");
+
+		JLabel name = new JLabel("Name :");
+		JTextField nameInput = new JTextField();
+
+		JLabel heroClass = new JLabel("Class :");
+		JComboBox<String> heroClassInput = new JComboBox<>();
+		heroClassInput.addItem("Keyblade Master");
+		heroClassInput.addItem("Wizard");
+		heroClassInput.addItem("Defender");
+
+		JButton button = new JButton("Create");
+
+		title.setHorizontalAlignment(SwingConstants.CENTER);
+		name.setHorizontalAlignment(SwingConstants.RIGHT);
+		nameInput.setHorizontalAlignment(SwingConstants.CENTER);
+		heroClass.setHorizontalAlignment(SwingConstants.RIGHT);
+
+		DefaultListCellRenderer renderer = new DefaultListCellRenderer();
+		renderer.setHorizontalAlignment(DefaultListCellRenderer.CENTER);
+		heroClassInput.setRenderer(renderer);
+
+		button.setHorizontalAlignment(SwingConstants.CENTER);
+
+		title.setFont(new Font("Arial", Font.PLAIN, 30));
+		name.setFont(new Font("Arial", Font.PLAIN, 20));
+		nameInput.setFont(new Font("Arial", Font.PLAIN, 20));
+		heroClass.setFont(new Font("Arial", Font.PLAIN, 20));
+		heroClassInput.setFont(new Font("Arial", Font.PLAIN, 20));
+		button.setFont(new Font("Arial", Font.PLAIN, 20));
+
+		dialog.setLayout(new GridBagLayout());
+
+		GridBagConstraints c = new GridBagConstraints();
+
+		c.fill = GridBagConstraints.BOTH;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.gridwidth = 2;
+		c.insets = new Insets(0, 0, 30, 0);
+		dialog.add(title, c);
+
+		c.gridx = 0;
+		c.gridy = 1;
+		c.gridwidth = 1;
+		c.ipady = 0;
+		c.insets = new Insets(0, 0, 0, 0);
+		dialog.add(name, c);
+
+		c.gridx = 1;
+		dialog.add(nameInput, c);
+
+		c.gridx = 0;
+		c.gridy = 2;
+		dialog.add(heroClass, c);
+
+		c.gridx = 1;
+		dialog.add(heroClassInput, c);
+
+		c.gridx = 0;
+		c.gridy = 3;
+		c.gridwidth = 2;
+		c.fill = GridBagConstraints.VERTICAL;
+		c.ipady = 10;
+		c.insets = new Insets(20, 0, 0, 0);
+
+		dialog.add(button, c);
+
+		button.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				controller.createCharacter(nameInput.getText(), (String) heroClassInput.getSelectedItem());
+			}
+		});
 	}
 
 	private JPanel createSaveBox(int number) {

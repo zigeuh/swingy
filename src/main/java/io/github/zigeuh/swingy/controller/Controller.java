@@ -35,6 +35,10 @@ public class Controller {
 	}
 
 	public void chooseSlot(int slot) {
-		System.out.println("Choosen slot: " + slot);
+		view.drawCharacterCreation();
+	}
+
+	public void createCharacter(String name, String heroClass) {
+		System.out.println(("User wants to create the " + heroClass + " " + name));
 	}
 }
