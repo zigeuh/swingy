@@ -2,7 +2,6 @@ package io.github.zigeuh.swingy.view;
 
 import io.github.zigeuh.swingy.controller.Controller;
 import io.github.zigeuh.swingy.model.Hero;
-import io.github.zigeuh.swingy.model.SaveManager;
 import io.github.zigeuh.swingy.model.SaveSlot;
 
 import javax.swing.*;
@@ -12,18 +11,21 @@ import java.awt.event.MouseEvent;
 
 public class View extends JFrame {
 
-	public View() {
+	private final Controller controller;
+
+	public View(Controller controller) {
 		super("Kingdom Hearts: Tessellated Hearts");
+
+		this.controller = controller;
 
 		this.setSize(750, 750);
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 
-		drawLoadMenu();
 		this.getContentPane().setBackground(Color.BLACK);
 	}
 
-	private void drawLoadMenu() {
+	public void drawLoadMenu(SaveSlot[] saveSlots) {
 		JLabel topLabel = new JLabel("Load", SwingConstants.LEFT);
 		topLabel.setForeground(Color.WHITE);
 		topLabel.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 32));
@@ -35,9 +37,7 @@ public class View extends JFrame {
 		main.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		main.setBackground(Color.BLACK);
 
-		SaveSlot[] saves = SaveManager.load();
-
-		for (SaveSlot save: saves) {
+		for (SaveSlot save: saveSlots) {
 			if (save.isOccupied()) {
 				Hero hero = save.getHero();
 				main.add(createSaveSlot(save.getSlotNumber(), hero.getName(), hero.getLevel(), hero.getXp()));
@@ -61,7 +61,7 @@ public class View extends JFrame {
 		slot.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Controller.chooseSlot(number);
+				controller.chooseSlot(number);
 			}
 
 			@Override

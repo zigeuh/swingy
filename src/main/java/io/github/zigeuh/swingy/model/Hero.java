@@ -10,10 +10,16 @@ public class Hero {
 	private int defense = 0;
 	private int hp = 0;
 
-	public Hero(String name, String heroClass) {
+	public Hero(String name, String heroClass, int level, int xp, int attack, int defense, int hp) {
 		this.name = name;
 		this.heroClass = heroClass;
+		this.level = level;
+		this.xp = xp;
+		this.attack = attack;
+		this.defense = defense;
+		this.hp = hp;
 	}
+
 	public String getName() {
 		return name;
 	}
