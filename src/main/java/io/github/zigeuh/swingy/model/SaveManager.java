@@ -1,5 +1,8 @@
 package io.github.zigeuh.swingy.model;
 
+import io.github.zigeuh.swingy.model.heroclass.AHeroClass;
+import io.github.zigeuh.swingy.model.heroclass.HeroClassFactory;
+
 import java.sql.*;
 
 public class SaveManager {
@@ -16,18 +19,15 @@ public class SaveManager {
 
 	public void save(int slot, Hero hero) {
 		try (Connection conn = DriverManager.getConnection(DB_URL)) {
-			String request = "MERGE INTO SAVES (slot, name, hero_class, level, xp, attack, defense, hp)"
-					+ "KEY(SLOT) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )";
+			String request = "MERGE INTO SAVES (slot, name, hero_class, level, xp)"
+					+ "KEY(SLOT) VALUES ( ?, ?, ?, ?, ? )";
 			PreparedStatement stmt = conn.prepareStatement(request);
 
-			stmt.setInt(0, slot);
-			stmt.setString(1, hero.getName());
-			stmt.setString(2, hero.getHeroClass());
-			stmt.setInt(3, hero.getLevel());
-			stmt.setInt(4, hero.getXp());
-			stmt.setInt(5, hero.getAttack());
-			stmt.setInt(6, hero.getDefense());
-			stmt.setInt(7, hero.getHp());
+			stmt.setInt(1, slot);
+			stmt.setString(2, hero.getName());
+			stmt.setString(3, hero.getHeroClass().getName());
+			stmt.setInt(4, hero.getLevel());
+			stmt.setInt(5, hero.getXp());
 
 			stmt.executeUpdate();
 		} catch (SQLException e) {
@@ -48,14 +48,11 @@ public class SaveManager {
 			while (resultSet.next() && i < 3) {
 				int slot = resultSet.getInt("slot");
 				String name = resultSet.getString("name");
-				String heroClass = resultSet.getString("hero_class");
+				AHeroClass heroClass = HeroClassFactory.createClass(resultSet.getString("hero_class"));
 				int level = resultSet.getInt("level");
 				int xp = resultSet.getInt("xp");
-				int attack = resultSet.getInt("attack");
-				int defense = resultSet.getInt("defense");
-				int hp = resultSet.getInt("hp");
 
-				saveSlots[slot] = new SaveSlot(slot + 1, true, new Hero(name, heroClass, level, xp, attack, defense, hp), 0);
+				saveSlots[slot] = new SaveSlot(slot + 1, true, new Hero(name, heroClass, level, xp), 0);
 				i++;
 			}
 
@@ -79,10 +76,7 @@ public class SaveManager {
 				+ "name VARCHAR(50), "
 				+ "hero_class VARCHAR(30), "
 				+ "level INT, "
-				+ "xp INT, "
-				+ "attack INT, "
-				+ "defense INT, "
-				+ "hp INT"
+				+ "xp INT"
 				+ ")";
 
 		try (Connection conn = DriverManager.getConnection(DB_URL)) {

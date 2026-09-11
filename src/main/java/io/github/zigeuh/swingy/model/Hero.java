@@ -1,30 +1,26 @@
 package io.github.zigeuh.swingy.model;
 
+import io.github.zigeuh.swingy.model.heroclass.AHeroClass;
+
 public class Hero {
 
 	private String name;
-	private String heroClass;
+	private AHeroClass heroClass;
 	private int level = 0;
 	private int xp = 0;
-	private int attack = 0;
-	private int defense = 0;
-	private int hp = 0;
 
-	public Hero(String name, String heroClass, int level, int xp, int attack, int defense, int hp) {
+	public Hero(String name, AHeroClass heroClass, int level, int xp) {
 		this.name = name;
 		this.heroClass = heroClass;
 		this.level = level;
 		this.xp = xp;
-		this.attack = attack;
-		this.defense = defense;
-		this.hp = hp;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public String getHeroClass() {
+	public AHeroClass getHeroClass() {
 		return heroClass;
 	}
 
@@ -37,14 +33,14 @@ public class Hero {
 	}
 
 	public int getAttack() {
-		return attack;
+		return heroClass.getBaseAttack();
 	}
 
 	public int getDefense() {
-		return defense;
+		return heroClass.getBaseDefense();
 	}
 
 	public int getHp() {
-		return hp;
+		return heroClass.getBaseHp();
 	}
 }

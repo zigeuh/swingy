@@ -1,0 +1,7 @@
+package io.github.zigeuh.swingy.model.heroclass;
+
+public class KeybladeMaster extends AHeroClass {
+	public KeybladeMaster() {
+		super("KEYBLADE_MASTER", 2, 4, 1);
+	}
+}

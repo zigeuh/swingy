@@ -5,7 +5,6 @@ import io.github.zigeuh.swingy.model.Hero;
 import io.github.zigeuh.swingy.model.SaveSlot;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicComboBoxUI;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -129,7 +128,8 @@ public class View extends JFrame {
 		button.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				controller.createCharacter(nameInput.getText(), (String) heroClassInput.getSelectedItem());
+				String selected = (String) heroClassInput.getSelectedItem();
+				controller.createCharacter(nameInput.getText(), selected);
 			}
 		});
 	}
