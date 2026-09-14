@@ -12,12 +12,17 @@ import java.awt.event.MouseEvent;
 public class View extends JFrame {
 
 	private final Controller controller;
-	private JComponent currentComponent;
+	private final CardLayout cardLayout;
 
 	public View(Controller controller) {
 		super("Kingdom Hearts: Tessellated Hearts");
 
 		this.controller = controller;
+		this.cardLayout = new CardLayout();
+		this.setLayout(this.cardLayout);
+
+		add("menu", drawLoadMenu(controller.loadSaves()));
+		add("create", drawCharacterCreation());
 
 		this.setSize(750, 750);
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -25,22 +30,12 @@ public class View extends JFrame {
 	}
 
 	public <T> void switchPanel(String name, T arg) {
-		if (this.currentComponent != null)
-			remove(currentComponent);
-
 		System.out.println("Switching to " + name);
 		switch (name) {
-			case "menu" -> currentComponent = drawLoadMenu((SaveSlot[]) arg);
+			case "menu" -> cardLayout.show(getContentPane(), "menu");
 
-			case "create" -> {
-				System.out.println("Create");
-				currentComponent = drawCharacterCreation();
-			}
+			case "create" -> cardLayout.show(getContentPane(), "create");
 		}
-
-		add(currentComponent);
-		revalidate();
-		currentComponent.repaint();
 	}
 
 	private JPanel drawLoadMenu(SaveSlot[] saveSlots) {
