@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 public class View extends JFrame {
 
 	private final Controller controller;
+	private JComponent currentComponent;
 
 	public View(Controller controller) {
 		super("Kingdom Hearts: Tessellated Hearts");
@@ -21,17 +22,37 @@ public class View extends JFrame {
 		this.setSize(750, 750);
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
-
-		this.getContentPane().setBackground(Color.BLACK);
 	}
 
-	public void drawLoadMenu(SaveSlot[] saveSlots) {
+	public <T> void switchPanel(String name, T arg) {
+		if (this.currentComponent != null)
+			remove(currentComponent);
+
+		System.out.println("Switching to " + name);
+		switch (name) {
+			case "menu" -> currentComponent = drawLoadMenu((SaveSlot[]) arg);
+
+			case "create" -> {
+				System.out.println("Create");
+				currentComponent = drawCharacterCreation();
+			}
+		}
+
+		add(currentComponent);
+		revalidate();
+		currentComponent.repaint();
+	}
+
+	private JPanel drawLoadMenu(SaveSlot[] saveSlots) {
+		JPanel panel = new JPanel(new BorderLayout());
+		panel.setBackground(Color.BLACK);
+
 		JLabel topLabel = new JLabel("Load", SwingConstants.LEFT);
 		topLabel.setForeground(Color.WHITE);
 		topLabel.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 32));
 		topLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0));
 
-		add(topLabel, BorderLayout.NORTH);
+		panel.add(topLabel, BorderLayout.NORTH);
 
 		JPanel main = new JPanel(new GridLayout(3, 1, 0, 10));
 		main.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -47,15 +68,14 @@ public class View extends JFrame {
 			}
 		}
 
-		add(main, BorderLayout.CENTER);
+		panel.add(main, BorderLayout.CENTER);
+
+		return panel;
 	}
 
-	public void drawCharacterCreation() {
-		JDialog dialog = new JDialog();
-		dialog.setSize(500, 500);
-		dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		dialog.setLocationRelativeTo(this.getContentPane());
-		dialog.setVisible(true);
+	private JPanel drawCharacterCreation() {
+
+		JPanel dialog = new JPanel();
 
 		JLabel title = new JLabel("Create your character");
 
@@ -69,17 +89,18 @@ public class View extends JFrame {
 		heroClassInput.addItem("Defender");
 
 		JButton button = new JButton("Create");
+		JButton cancel = new JButton("Cancel");
 
 		title.setHorizontalAlignment(SwingConstants.CENTER);
 		name.setHorizontalAlignment(SwingConstants.RIGHT);
 		nameInput.setHorizontalAlignment(SwingConstants.CENTER);
 		heroClass.setHorizontalAlignment(SwingConstants.RIGHT);
+		button.setHorizontalAlignment(SwingConstants.CENTER);
+		cancel.setHorizontalAlignment(SwingConstants.CENTER);
 
 		DefaultListCellRenderer renderer = new DefaultListCellRenderer();
 		renderer.setHorizontalAlignment(DefaultListCellRenderer.CENTER);
 		heroClassInput.setRenderer(renderer);
-
-		button.setHorizontalAlignment(SwingConstants.CENTER);
 
 		title.setFont(new Font("Arial", Font.PLAIN, 30));
 		name.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -87,6 +108,7 @@ public class View extends JFrame {
 		heroClass.setFont(new Font("Arial", Font.PLAIN, 20));
 		heroClassInput.setFont(new Font("Arial", Font.PLAIN, 20));
 		button.setFont(new Font("Arial", Font.PLAIN, 20));
+		cancel.setFont(new Font("Arial", Font.PLAIN, 20));
 
 		dialog.setLayout(new GridBagLayout());
 
@@ -122,8 +144,11 @@ public class View extends JFrame {
 		c.fill = GridBagConstraints.VERTICAL;
 		c.ipady = 10;
 		c.insets = new Insets(20, 0, 0, 0);
-
 		dialog.add(button, c);
+
+		c.gridy = 4;
+		c.insets = new Insets(0, 0, 0, 0);
+		dialog.add(cancel, c);
 
 		button.addMouseListener(new MouseAdapter() {
 			@Override
@@ -132,6 +157,15 @@ public class View extends JFrame {
 				controller.createCharacter(nameInput.getText(), selected);
 			}
 		});
+
+		cancel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				controller.cancelCreation();
+			}
+		});
+
+		return dialog;
 	}
 
 	private JPanel createSaveBox(int number) {

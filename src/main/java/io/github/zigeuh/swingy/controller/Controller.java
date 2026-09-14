@@ -25,7 +25,7 @@ public class Controller {
 
 		SwingUtilities.invokeLater(() -> {
 			this.view = new View(this);
-			this.view.drawLoadMenu(saveSlots);
+			this.view.switchPanel("menu", saveSlots);
 			this.view.setVisible(true);
 		});
 	}
@@ -51,7 +51,7 @@ public class Controller {
 			System.out.println("Loading hero: " + slot.getHero().getHeroClass() + " " + slot.getHero().getName());
 		}
 		else {
-			view.drawCharacterCreation();
+			view.switchPanel("create", null);
 		}
 	}
 
@@ -64,5 +64,9 @@ public class Controller {
 		AHeroClass heroClass = HeroClassFactory.createClass(formattedName);
 
 		save(1, new Hero(name, heroClass, 0, 0)); // TODO To remove since save will be done by the player in the game
+	}
+
+	public void cancelCreation() {
+		view.switchPanel("menu", slots);
 	}
 }
