@@ -2,6 +2,7 @@ package io.github.zigeuh.swingy.view;
 
 import io.github.zigeuh.swingy.controller.Controller;
 import io.github.zigeuh.swingy.model.Hero;
+import io.github.zigeuh.swingy.model.Map;
 import io.github.zigeuh.swingy.model.SaveSlot;
 
 import javax.swing.*;
@@ -33,9 +34,21 @@ public class View extends JFrame {
 		System.out.println("Switching to " + name);
 		switch (name) {
 			case "menu" -> cardLayout.show(getContentPane(), "menu");
-
 			case "create" -> cardLayout.show(getContentPane(), "create");
+			case "game" -> drawGame((Map) arg);
 		}
+	}
+
+	private void drawGame(Map map) {
+
+		GameView gameView = new GameView(map);
+		add("game", gameView);
+		cardLayout.show(getContentPane(), "game");
+
+		Timer timer = new Timer(16, e -> {
+			gameView.repaint();
+		});
+		timer.start();
 	}
 
 	private JPanel drawLoadMenu(SaveSlot[] saveSlots) {
