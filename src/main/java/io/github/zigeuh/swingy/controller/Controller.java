@@ -6,40 +6,42 @@ import io.github.zigeuh.swingy.model.heroclass.HeroClassFactory;
 import io.github.zigeuh.swingy.view.View;
 
 import javax.swing.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
-public class Controller implements KeyListener {
+public class Controller {
 
 	private View view;
-	private final SaveManager saveManager;
 	private Game game;
-
 	private SaveSlot[] slots;
+	private final SaveManager saveManager;
 
 	public Controller() {
 		this.saveManager = new SaveManager();
+		this.view = new View(this);
 	}
 
 	public void start() {
 		SaveSlot[] saveSlots = loadSaves();
-
-		SwingUtilities.invokeLater(() -> {
-			this.view = new View(this);
-			this.view.switchPanel("menu", saveSlots);
-			this.view.addKeyListener(this);
-			this.view.setVisible(true);
-		});
+		view.setVisible(true);
+		view.showMenu(saveSlots);
 	}
 
 	public void save(int slot, Hero hero) {
+		// TODO
 		System.out.println("Saving in slot " + slot);
 		saveManager.save(slot, hero);
+	}
+
+	public void saveMenu() {
+		// TODO
 	}
 
 	public SaveSlot[] loadSaves() {
 		this.slots = saveManager.load();
 		return this.slots;
+	}
+
+	public View getView() {
+		return this.view;
 	}
 
 	public void chooseSlot(int slotId) {
@@ -54,7 +56,7 @@ public class Controller implements KeyListener {
 			startGame(slot.getHero());
 		}
 		else {
-			view.switchPanel("create", null);
+			view.showCreateHero();
 		}
 	}
 
@@ -68,40 +70,32 @@ public class Controller implements KeyListener {
 		Hero hero = new Hero(name, heroClass, 0, 0);
 
 		startGame(hero);
-
-		//save(1, new Hero(name, heroClass, 0, 0)); // TODO To remove since save will be done by the player in the game
 	}
 
 	public void cancelCreation() {
-		view.switchPanel("menu", slots);
+		view.showMenu(slots);
 	}
+
+	public void pause() {
+		view.showPause();
+	}
+
+	public void resume() {
+		view.showGame(game);
+	}
+
+	public void backToMenu() {
+		// TODO
+	}
+
+	public void move(Direction direction) {
+		game.move(direction);
+		view.refreshGame();
+	}
+
 
 	private void startGame(Hero hero) {
 		this.game = new Game(hero);
-
-		view.switchPanel("game", game.getMap());
+		view.showGame(game);
 	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {}
-
-	public void move(int x, int y) {
-		Map map = game.getMap();
-		Coordinates pos = map.getHeroPos();
-
-		map.setHeroPos(pos.getX() + x, pos.getY() + y);
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		switch (e.getKeyCode()) {
-			case KeyEvent.VK_LEFT -> move(-1, 0);
-			case KeyEvent.VK_UP -> move(0, -1);
-			case KeyEvent.VK_RIGHT -> move(1, 0);
-			case KeyEvent.VK_DOWN -> move(0, 1);
-		}
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {}
 }

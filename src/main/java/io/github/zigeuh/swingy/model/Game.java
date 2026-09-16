@@ -3,7 +3,7 @@ package io.github.zigeuh.swingy.model;
 public class Game {
 
 	private Map map;
-	private Hero hero;
+	private final Hero hero;
 
 	public Game(Hero hero) {
 		this.hero = hero;
@@ -13,5 +13,14 @@ public class Game {
 
 	public Map getMap() {
 		return this.map;
+	}
+
+	public void move(Direction direction) {
+		Coordinates currentPos = map.getHeroPos();
+
+		int targetX = currentPos.getX() + direction.getDx();
+		int targetY = currentPos.getY() + direction.getDy();
+
+		map.setHeroPos(targetX, targetY);
 	}
 }
