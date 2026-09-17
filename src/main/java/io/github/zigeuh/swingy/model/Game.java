@@ -22,8 +22,8 @@ public class Game {
 	public Enemy move(Direction direction) {
 		Coordinates currentPos = map.getHeroPos();
 
-		int targetX = currentPos.getX() + direction.getDx();
-		int targetY = currentPos.getY() + direction.getDy();
+		int targetX = currentPos.x() + direction.getDx();
+		int targetY = currentPos.y() + direction.getDy();
 
 		map.setHeroPos(targetX, targetY);
 

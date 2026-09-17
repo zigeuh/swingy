@@ -70,8 +70,8 @@ public class GamePanel extends JPanel {
 
 		Coordinates hero = map.getHeroPos();
 
-		int camX = Math.clamp(hero.getX() - visX / 2, 0, mapW - visX);
-		int camY = Math.clamp(hero.getY() - visY / 2, 0, mapH - visY);
+		int camX = Math.clamp(hero.x() - visX / 2, 0, mapW - visX);
+		int camY = Math.clamp(hero.y() - visY / 2, 0, mapH - visY);
 
 		int offX = (getWidth()  - visX * TILE_SIZE) / 2;
 		int offY = (getHeight() - visY * TILE_SIZE) / 2;
@@ -83,7 +83,7 @@ public class GamePanel extends JPanel {
 				int screenX = offX + x * TILE_SIZE;
 				int screenY = offY + y * TILE_SIZE;
 
-				if (hero.getX() == mapX && hero.getY() == mapY)
+				if (hero.x() == mapX && hero.y() == mapY)
 					g.setColor(Color.GREEN);
 				else
 					g.setColor(grid[mapY][mapX] == null ? Color.GRAY : Color.RED);
