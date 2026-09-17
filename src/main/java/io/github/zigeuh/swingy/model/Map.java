@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Map {
 
-	private final boolean[][] grid;
+	private final Enemy[][] grid;
 	private Coordinates heroPos;
 
 	Map(int level) {
@@ -14,10 +14,10 @@ public class Map {
 		this.heroPos = new Coordinates(mid, mid);
 	}
 
-	private boolean[][] createNewMap(int level) {
+	private Enemy[][] createNewMap(int level) {
 
 		int size = (level - 1) * 5 + 10 - (level % 2);
-		boolean[][] newMap = new boolean[size][size];
+		Enemy[][] newMap = new Enemy[size][size];
 
 		Random rand = new Random();
 		double enemyChance = 0.1;
@@ -26,16 +26,16 @@ public class Map {
 		for (int y = 0; y < size; y++) {
 			for (int x = 0; x < size; x++) {
 				if (x == mid && y == mid)
-					newMap[y][x] = false;
+					newMap[y][x] = null;
 				else
-					newMap[y][x] = rand.nextDouble() < enemyChance;
+					newMap[y][x] = rand.nextDouble() < enemyChance ? new Enemy("Test", 1, 1 ,1) : null;
 			}
 		}
 
 		return newMap;
 	}
 
-	public boolean[][] getGrid() {
+	public Enemy[][] getGrid() {
 		return grid;
 	}
 

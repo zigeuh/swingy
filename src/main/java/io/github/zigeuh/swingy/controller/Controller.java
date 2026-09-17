@@ -6,6 +6,7 @@ import io.github.zigeuh.swingy.model.heroclass.HeroClassFactory;
 import io.github.zigeuh.swingy.view.View;
 
 import javax.swing.*;
+import java.util.Random;
 
 public class Controller {
 
@@ -89,10 +90,20 @@ public class Controller {
 	}
 
 	public void move(Direction direction) {
-		game.move(direction);
-		view.refreshGame();
+		Enemy result = game.move(direction);
+		if (result == null) view.refreshGame();
+		else view.showStartBattle();
 	}
 
+	public void fight() {
+		// TODO
+	}
+
+	public void escape() {
+		Random rand = new Random();
+		if (rand.nextDouble() < 0.5) fight();
+		else resume();
+	}
 
 	private void startGame(Hero hero) {
 		this.game = new Game(hero);

@@ -3,10 +3,7 @@ package io.github.zigeuh.swingy.view;
 import io.github.zigeuh.swingy.controller.Controller;
 import io.github.zigeuh.swingy.model.Game;
 import io.github.zigeuh.swingy.model.SaveSlot;
-import io.github.zigeuh.swingy.view.panel.CreateHeroPanel;
-import io.github.zigeuh.swingy.view.panel.GamePanel;
-import io.github.zigeuh.swingy.view.panel.MenuPanel;
-import io.github.zigeuh.swingy.view.panel.PausePanel;
+import io.github.zigeuh.swingy.view.panel.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +16,7 @@ public class View extends JFrame {
 	private final MenuPanel menuPanel;
 	private final CreateHeroPanel createHeroPanel;
 	private final PausePanel pausePanel;
+	private final StartBattlePanel startBattlePanel;
 	private GamePanel gamePanel;
 
 	public View(Controller controller) {
@@ -31,10 +29,12 @@ public class View extends JFrame {
 		menuPanel = new MenuPanel(controller);
 		createHeroPanel = new CreateHeroPanel(controller);
 		pausePanel = new PausePanel(controller);
+		startBattlePanel = new StartBattlePanel(controller);
 
 		add("menu", menuPanel);
 		add("create", createHeroPanel);
 		add("pause", pausePanel);
+		add("startBattle", startBattlePanel);
 
 		this.setSize(750, 750);
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -61,6 +61,10 @@ public class View extends JFrame {
 			add("game", gamePanel);
 		}
 		cardLayout.show(getContentPane(), "game");
+	}
+
+	public void showStartBattle() {
+		cardLayout.show(getContentPane(), "startBattle");
 	}
 
 	public void refreshGame() {

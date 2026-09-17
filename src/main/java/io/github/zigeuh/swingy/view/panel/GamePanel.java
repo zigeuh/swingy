@@ -1,10 +1,7 @@
 package io.github.zigeuh.swingy.view.panel;
 
 import io.github.zigeuh.swingy.controller.Controller;
-import io.github.zigeuh.swingy.model.Coordinates;
-import io.github.zigeuh.swingy.model.Direction;
-import io.github.zigeuh.swingy.model.Game;
-import io.github.zigeuh.swingy.model.Map;
+import io.github.zigeuh.swingy.model.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -59,7 +56,7 @@ public class GamePanel extends JPanel {
 
 		Map map = this.game.getMap();
 
-		boolean[][] grid = map.getGrid();
+		Enemy[][] grid = map.getGrid();
 		if (grid == null || grid.length == 0 || grid[0].length == 0)
 			return;
 
@@ -89,7 +86,7 @@ public class GamePanel extends JPanel {
 				if (hero.getX() == mapX && hero.getY() == mapY)
 					g.setColor(Color.GREEN);
 				else
-					g.setColor(grid[mapY][mapX] ? Color.RED : Color.GRAY);
+					g.setColor(grid[mapY][mapX] == null ? Color.GRAY : Color.RED);
 
 				g.fillRect(screenX, screenY, TILE_SIZE, TILE_SIZE);
 			}

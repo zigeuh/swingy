@@ -4,8 +4,8 @@ import io.github.zigeuh.swingy.model.heroclass.AHeroClass;
 
 public class Hero {
 
-	private String name;
-	private AHeroClass heroClass;
+	private final String name;
+	private final AHeroClass heroClass;
 	private int level = 0;
 	private int xp = 0;
 
