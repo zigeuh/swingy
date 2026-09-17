@@ -15,6 +15,10 @@ public class Game {
 		return this.map;
 	}
 
+	public Hero getHero() {
+		return this.hero;
+	}
+
 	public Enemy move(Direction direction) {
 		Coordinates currentPos = map.getHeroPos();
 

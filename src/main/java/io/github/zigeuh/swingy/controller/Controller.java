@@ -27,13 +27,11 @@ public class Controller {
 	}
 
 	public void save(int slot, Hero hero) {
-		// TODO
-		System.out.println("Saving in slot " + slot);
 		saveManager.save(slot, hero);
 	}
 
 	public void saveMenu() {
-		// TODO
+		view.showSave(slots);
 	}
 
 	public SaveSlot[] loadSaves() {
@@ -61,6 +59,20 @@ public class Controller {
 		}
 	}
 
+	public void saveSlot(int slotId) {
+		if (slotId < 1 || slotId > 3) {
+			throw new RuntimeException("Tried to load invalid slot");
+		}
+		slotId = slotId - 1;
+
+		if (game == null) throw new RuntimeException("Tried to save while no game is started");
+
+		save(slotId, game.getHero());
+		slots[slotId] = new SaveSlot(slotId, true, game.getHero(), 0);
+
+		view.showGame(game);
+	}
+
 	public void createCharacter(String name, String heroClassName) {
 		System.out.println(("Creating the " + heroClassName + " " + name));
 
@@ -86,7 +98,8 @@ public class Controller {
 	}
 
 	public void backToMenu() {
-		// TODO
+		game = null;
+		view.showMenu(slots);
 	}
 
 	public void move(Direction direction) {
