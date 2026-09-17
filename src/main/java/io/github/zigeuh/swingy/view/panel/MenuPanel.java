@@ -19,11 +19,39 @@ public class MenuPanel extends JPanel {
 		setBackground(Color.BLACK);
 		setLayout(new BorderLayout());
 
+		JPanel header = new JPanel(new BorderLayout());
+		header.setOpaque(false);
+		header.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
+
 		JLabel title = new JLabel("Load", SwingConstants.LEFT);
 		title.setForeground(Color.WHITE);
 		title.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 32));
-		title.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0));
-		add(title, BorderLayout.NORTH);
+		header.add(title, BorderLayout.WEST);
+
+		JButton delete = new JButton("Delete");
+		delete.setFont(new Font("Arial", Font.BOLD, 20));
+		delete.setForeground(Color.WHITE);
+		delete.setBackground(new Color(50, 50, 50));
+		delete.setOpaque(true);
+		delete.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createLineBorder(Color.WHITE, 1),   // la bordure existante
+				BorderFactory.createEmptyBorder(5, 10, 5, 10)    // padding: haut, gauche, bas, droite
+		));
+		delete.addActionListener(e -> controller.deleteMenu());
+		delete.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				delete.setBackground(new Color(41, 98, 255));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				delete.setBackground(new Color(50, 50, 50));
+			}
+		});
+		header.add(delete, BorderLayout.EAST);
+
+		add(header, BorderLayout.NORTH);
 
 		slotList.setOpaque(false);
 		slotList.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -45,7 +73,7 @@ public class MenuPanel extends JPanel {
 		Hero hero = slot.getHero();
 		JPanel box = createSlotBox(slot.getSlotNumber());
 
-		JLabel title = new JLabel("Slot " + slot.getSlotNumber() + " — " + hero.getName());
+		JLabel title = new JLabel("Slot " + (slot.getSlotNumber() + 1) + " — " + hero.getName());
 		title.setFont(new Font("Arial", Font.BOLD, 18));
 		title.setForeground(Color.WHITE);
 		box.add(title, BorderLayout.NORTH);
@@ -64,7 +92,7 @@ public class MenuPanel extends JPanel {
 	private JPanel createEmptySlot(int number) {
 		JPanel box = createSlotBox(number);
 
-		JLabel title = new JLabel("Slot " + number + " - Empty", SwingConstants.CENTER);
+		JLabel title = new JLabel("Slot " + (number + 1) + " - Empty", SwingConstants.CENTER);
 		title.setFont(new Font("Arial", Font.BOLD, 18));
 		title.setForeground(Color.GRAY);
 		box.add(title, BorderLayout.CENTER);

@@ -45,7 +45,7 @@ public class SavePanel extends JPanel {
 		Hero hero = slot.getHero();
 		JPanel box = createSlotBox(slot.getSlotNumber());
 
-		JLabel title = new JLabel("Slot " + slot.getSlotNumber() + " — " + hero.getName());
+		JLabel title = new JLabel("Slot " + (slot.getSlotNumber() + 1)  + " — " + hero.getName());
 		title.setFont(new Font("Arial", Font.BOLD, 18));
 		title.setForeground(Color.WHITE);
 		box.add(title, BorderLayout.NORTH);
@@ -64,7 +64,7 @@ public class SavePanel extends JPanel {
 	private JPanel createEmptySlot(int number) {
 		JPanel box = createSlotBox(number);
 
-		JLabel title = new JLabel("Slot " + number + " - Empty", SwingConstants.CENTER);
+		JLabel title = new JLabel("Slot " + (number + 1) + " - Empty", SwingConstants.CENTER);
 		title.setFont(new Font("Arial", Font.BOLD, 18));
 		title.setForeground(Color.GRAY);
 		box.add(title, BorderLayout.CENTER);

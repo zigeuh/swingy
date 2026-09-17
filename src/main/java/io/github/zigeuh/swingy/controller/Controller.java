@@ -44,11 +44,11 @@ public class Controller {
 	}
 
 	public void chooseSlot(int slotId) {
-		if (slotId <= 0 || slotId > 3) {
+		if (slotId < 0 || slotId >= 3) {
 			throw new RuntimeException("Tried to load invalid slot");
 		}
 
-		SaveSlot slot = this.slots[slotId - 1];
+		SaveSlot slot = this.slots[slotId];
 
 		if (slot.isOccupied()) {
 			System.out.println("Loading hero: " + slot.getHero().getHeroClass() + " " + slot.getHero().getName());
@@ -59,11 +59,21 @@ public class Controller {
 		}
 	}
 
-	public void saveSlot(int slotId) {
-		if (slotId < 1 || slotId > 3) {
+	public void deleteSlot(int slotId) {
+		if (slotId < 0 || slotId >= 3) {
 			throw new RuntimeException("Tried to load invalid slot");
 		}
-		slotId = slotId - 1;
+
+		saveManager.delete(slotId);
+		slots[slotId] = new SaveSlot(slotId, false, null, 0);
+
+		view.showMenu(slots);
+	}
+
+	public void saveSlot(int slotId) {
+		if (slotId < 0 || slotId >= 3) {
+			throw new RuntimeException("Tried to load invalid slot");
+		}
 
 		if (game == null) throw new RuntimeException("Tried to save while no game is started");
 
@@ -71,6 +81,10 @@ public class Controller {
 		slots[slotId] = new SaveSlot(slotId, true, game.getHero(), 0);
 
 		view.showGame(game);
+	}
+
+	public void deleteMenu() {
+		view.showDelete(slots);
 	}
 
 	public void createCharacter(String name, String heroClassName) {

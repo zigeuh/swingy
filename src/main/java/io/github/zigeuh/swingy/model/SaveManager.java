@@ -35,6 +35,19 @@ public class SaveManager {
 		}
 	}
 
+	public void delete(int slot) {
+		try (Connection conn = DriverManager.getConnection(DB_URL)) {
+			String request = "DELETE FROM SAVES WHERE slot = ?";
+			PreparedStatement stmt = conn.prepareStatement(request);
+
+			stmt.setInt(1, slot);
+
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	public SaveSlot[] load() {
 
 		SaveSlot[] saveSlots = new SaveSlot[3];
@@ -52,7 +65,7 @@ public class SaveManager {
 				int level = resultSet.getInt("level");
 				int xp = resultSet.getInt("xp");
 
-				saveSlots[slot] = new SaveSlot(slot + 1, true, new Hero(name, heroClass, level, xp), 0);
+				saveSlots[slot] = new SaveSlot(slot, true, new Hero(name, heroClass, level, xp), 0);
 				i++;
 			}
 
@@ -63,7 +76,7 @@ public class SaveManager {
 
 		for (int i = 0; i < 3; i++) {
 			if (saveSlots[i] == null) {
-				saveSlots[i] = new SaveSlot(i + 1, false, null, 0);
+				saveSlots[i] = new SaveSlot(i, false, null, 0);
 			}
 		}
 

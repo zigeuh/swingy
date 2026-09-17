@@ -18,6 +18,7 @@ public class View extends JFrame {
 	private final PausePanel pausePanel;
 	private final StartBattlePanel startBattlePanel;
 	private final SavePanel savePanel;
+	private final DeletePanel deletePanel;
 	private GamePanel gamePanel;
 
 	public View(Controller controller) {
@@ -32,12 +33,14 @@ public class View extends JFrame {
 		pausePanel = new PausePanel(controller);
 		startBattlePanel = new StartBattlePanel(controller);
 		savePanel = new SavePanel(controller);
+		deletePanel = new DeletePanel(controller);
 
 		add("menu", menuPanel);
 		add("create", createHeroPanel);
 		add("pause", pausePanel);
 		add("startBattle", startBattlePanel);
 		add("save", savePanel);
+		add("delete", deletePanel);
 
 		this.setSize(750, 750);
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -73,6 +76,11 @@ public class View extends JFrame {
 	public void showSave(SaveSlot[] slots) {
 		savePanel.setSlots(slots);
 		cardLayout.show(getContentPane(), "save");
+	}
+
+	public void showDelete(SaveSlot[] slots) {
+		deletePanel.setSlots(slots);
+		cardLayout.show(getContentPane(), "delete");
 	}
 
 	public void refreshGame() {
