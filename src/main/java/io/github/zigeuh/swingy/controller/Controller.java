@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class Controller {
 
-	private View view;
+	private final View view;
 	private Game game;
 	private SaveSlot[] slots;
 	private final SaveManager saveManager;
@@ -52,7 +52,7 @@ public class Controller {
 
 		if (slot.isOccupied()) {
 			System.out.println("Loading hero: " + slot.getHero().getHeroClass() + " " + slot.getHero().getName());
-			startGame(slot.getHero());
+			startGame(new Hero(slot.getHero()));
 		}
 		else {
 			view.showCreateHero();
@@ -117,13 +117,18 @@ public class Controller {
 	}
 
 	public void move(Direction direction) {
-		Enemy result = game.move(direction);
-		if (result == null) view.refreshGame();
-		else view.showStartBattle();
+		boolean enemyDetected = game.move(direction);
+		if (enemyDetected) view.showStartBattle();
+		else view.refreshGame();
 	}
 
 	public void fight() {
-		// TODO
+		if (game.fight().victory()) {
+			view.showGame(game);
+		} else {
+			game = null;
+			view.showMenu(slots);
+		}
 	}
 
 	public void escape() {

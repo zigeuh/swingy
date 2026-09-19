@@ -13,10 +13,6 @@ public class Enemy {
 		this.defense = defense;
 	}
 
-	public void takeDamage(int damage) {
-		hp = Math.clamp(hp - damage , 0, hp);
-	}
-
 	public String getName() {
 		return name;
 	}

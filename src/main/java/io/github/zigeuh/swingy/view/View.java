@@ -1,6 +1,7 @@
 package io.github.zigeuh.swingy.view;
 
 import io.github.zigeuh.swingy.controller.Controller;
+import io.github.zigeuh.swingy.model.Enemy;
 import io.github.zigeuh.swingy.model.Game;
 import io.github.zigeuh.swingy.model.SaveSlot;
 import io.github.zigeuh.swingy.view.panel.*;

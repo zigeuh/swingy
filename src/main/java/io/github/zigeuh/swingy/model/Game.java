@@ -19,7 +19,7 @@ public class Game {
 		return this.hero;
 	}
 
-	public Enemy move(Direction direction) {
+	public boolean move(Direction direction) {
 		Coordinates currentPos = map.getHeroPos();
 
 		int targetX = currentPos.x() + direction.getDx();
@@ -28,10 +28,16 @@ public class Game {
 		map.setHeroPos(targetX, targetY);
 
 		Enemy target = map.getGrid()[targetY][targetX];
-		if (target != null) {
-			return new Enemy("Test", 1, 1 ,1);
-		}
+		return target != null;
+	}
 
-		return null;
+	public BattleResult fight() {
+		BattleResult result = Battle.simulate(hero, map.getEnemyAt(map.getHeroPos()));
+		hero.setCurrentHp(result.heroHpLeft());
+		if (result.victory()) {
+			map.removeEnemyAt(map.getHeroPos());
+			hero.gainXp(result.xpGained());
+		}
+		return result;
 	}
 }

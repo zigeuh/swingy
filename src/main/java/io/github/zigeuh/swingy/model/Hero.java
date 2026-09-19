@@ -6,14 +6,44 @@ public class Hero {
 
 	private final String name;
 	private final AHeroClass heroClass;
+	private int hp;
 	private int level = 0;
 	private int xp = 0;
 
 	public Hero(String name, AHeroClass heroClass, int level, int xp) {
 		this.name = name;
 		this.heroClass = heroClass;
+		this.hp = heroClass.getBaseHp();
 		this.level = level;
 		this.xp = xp;
+	}
+
+	public Hero(Hero hero) {
+		this.name = hero.getName();
+		this.heroClass = hero.getHeroClass();
+		this.hp = heroClass.getBaseHp();
+		this.level = hero.getLevel();
+		this.xp = hero.getXp();
+	}
+
+	public void gainXp(int xp) {
+		if (xp < 0) {
+			throw new IllegalArgumentException("XP gain can't be negative");
+		}
+
+		this.xp += xp;
+
+		int requiredXp = (int) (level * 1000 + Math.pow(level - 1, 2) * 450);
+
+		while (requiredXp <= this.xp) {
+			this.level++;
+			this.hp = getMaxHp();
+			this.xp -= requiredXp;
+		}
+	}
+
+	public void setCurrentHp(int hp) {
+		this.hp = hp;
 	}
 
 	public String getName() {
@@ -32,6 +62,10 @@ public class Hero {
 		return xp;
 	}
 
+	public int getMaxHp() {
+		return heroClass.getBaseHp() + Math.floorDiv(level, 3);
+	}
+
 	public int getAttack() {
 		return heroClass.getBaseAttack();
 	}
@@ -41,6 +75,6 @@ public class Hero {
 	}
 
 	public int getHp() {
-		return heroClass.getBaseHp();
+		return hp;
 	}
 }

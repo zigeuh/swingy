@@ -39,6 +39,14 @@ public class Map {
 		return grid;
 	}
 
+	public Enemy getEnemyAt(Coordinates c) {
+		return grid[c.y()][c.x()];
+	}
+
+	public void removeEnemyAt(Coordinates c) {
+		grid[c.y()][c.x()] = null;
+	}
+
 	public void setHeroPos(int x, int y) {
 		heroPos = new Coordinates(x, y);
 	}
