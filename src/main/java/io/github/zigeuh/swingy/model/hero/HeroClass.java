@@ -1,19 +1,21 @@
 package io.github.zigeuh.swingy.model.hero;
 
 public enum HeroClass {
-	KEYBLADE_MASTER("Keyblade Master", "/sprites/sora", 32, 16, 6),
-	WIZARD("Wizard", "/sprites/donald", 35, 11, 8),
-	DEFENDER("Defender", "/sprites/goofy", 55, 7, 13);
+	KEYBLADE_MASTER("Keyblade Master", "/sprites/sora", 2, 32, 16, 6),
+	WIZARD("Wizard", "/sprites/donald", 2, 35, 11, 8),
+	DEFENDER("Defender", "/sprites/goofy", 2, 55, 7, 13);
 
 	private final String displayName;
 	private final String spriteFolder;
+	private final int tilesHigh;
 	private final int baseHp;
 	private final int baseAttack;
 	private final int baseDefense;
 
-	HeroClass(String displayName, String spriteFolder, int baseHp, int baseAttack, int baseDefense) {
+	HeroClass(String displayName, String spriteFolder, int tilesHigh, int baseHp, int baseAttack, int baseDefense) {
 		this.displayName = displayName;
 		this.spriteFolder = spriteFolder;
+		this.tilesHigh = tilesHigh;
 		this.baseHp = baseHp;
 		this.baseAttack = baseAttack;
 		this.baseDefense = baseDefense;
@@ -37,5 +39,9 @@ public enum HeroClass {
 
 	public String getSpriteFolder() {
 		return spriteFolder;
+	}
+
+	public int getTilesHigh() {
+		return tilesHigh;
 	}
 }

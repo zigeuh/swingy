@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.EnumMap;
 
 public class GamePanel extends JPanel {
@@ -108,7 +109,8 @@ public class GamePanel extends JPanel {
 			setBackground(Color.BLACK);
 		}
 
-		private void drawSprite(Graphics g, Image sprite, int screenX, int screenY, Color invalid) {
+		private void drawSprite(Graphics g, Image sprite, int screenX, int screenY, int tilesHigh, Color invalid) {
+			int realHigh = tilesHigh * TILE_SIZE;
 			if (sprite == null) {
 				g.setColor(invalid);
 				g.fillRect(screenX, screenY, TILE_SIZE, TILE_SIZE);
@@ -116,11 +118,12 @@ public class GamePanel extends JPanel {
 				int width = sprite.getWidth(null);
 				int height = sprite.getHeight(null);
 				if (width <= 0 || height <= 0) {
-					g.drawImage(sprite, screenX, screenY, TILE_SIZE, TILE_SIZE, null);
+					g.drawImage(sprite, screenX, screenY + TILE_SIZE - realHigh, TILE_SIZE, realHigh, null);
 				} else {
-					int dw = Math.max(1, (int) Math.round((double) TILE_SIZE * width / height));
+					int dw = Math.max(1, (int) Math.round((double) realHigh * width / height));
 					int dx = screenX + (TILE_SIZE - dw) / 2;
-					g.drawImage(sprite, dx, screenY, dw, TILE_SIZE, null);
+					int dy = screenY + TILE_SIZE - realHigh;
+					g.drawImage(sprite, dx, dy, dw, realHigh, null);
 				}
 			}
 		}
@@ -153,28 +156,31 @@ public class GamePanel extends JPanel {
 
 			for (int y = 0; y < visY; y++) {
 				for (int x = 0; x < visX; x++) {
+					int screenX = offX + x * TILE_SIZE;
+					int screenY = offY + y * TILE_SIZE;
+
+					g.setColor(Color.GRAY);
+					g.fillRect(screenX, screenY, TILE_SIZE, TILE_SIZE);
+				}
+			}
+
+			for (int y = 0; y < visY; y++) {
+				for (int x = 0; x < visX; x++) {
 					int mapX = camX + x;
 					int mapY = camY + y;
 					int screenX = offX + x * TILE_SIZE;
 					int screenY = offY + y * TILE_SIZE;
 
 					if (hero.x() == mapX && hero.y() == mapY) {
-
-						g.setColor(Color.GRAY);
-						g.fillRect(screenX, screenY, TILE_SIZE, TILE_SIZE);
-
 						Image sprite = heroSprite(game.getFacing(), game.getHero().getHeroClass().getSpriteFolder());
-						drawSprite(g, sprite, screenX, screenY, Color.GREEN);
+						drawSprite(g, sprite, screenX, screenY, game.getHero().getHeroClass().getTilesHigh(), Color.GREEN);
 
 					} else {
 						Enemy enemy = grid[mapY][mapX];
 
-						g.setColor(Color.GRAY);
-						g.fillRect(screenX, screenY, TILE_SIZE, TILE_SIZE);
-
 						if (enemy != null) {
 							Image sprite = enemySprite(enemy.getType());
-							drawSprite(g, sprite, screenX, screenY, Color.RED);
+							drawSprite(g, sprite, screenX, screenY, enemy.getType().getTilesHigh(), Color.RED);
 						}
 					}
 				}
