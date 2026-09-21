@@ -12,6 +12,7 @@ public class Controller {
 
 	private final View view;
 	private Game game;
+	private BattleResult pendingResult;
 	private SaveSlot[] slots;
 	private final SaveManager saveManager;
 
@@ -123,9 +124,16 @@ public class Controller {
 	}
 
 	public void fight() {
-		if (game.fight().victory()) {
+		this.pendingResult = game.fight();
+		view.showBattleResult(this.pendingResult);
+	}
+
+	public void afterBattle() {
+		if (pendingResult != null && pendingResult.victory()) {
+			pendingResult = null;
 			view.showGame(game);
 		} else {
+			pendingResult = null;
 			game = null;
 			view.showMenu(slots);
 		}

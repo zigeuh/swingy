@@ -63,15 +63,15 @@ public class Hero {
 	}
 
 	public int getMaxHp() {
-		return heroClass.getBaseHp() + Math.floorDiv(level, 3);
+		return heroClass.getBaseHp() + Math.floorDiv(Math.max(0, level), 2) * 5;
 	}
 
 	public int getAttack() {
-		return heroClass.getBaseAttack();
+		return heroClass.getBaseAttack() + Math.floorDiv(Math.max(0, level), 3) * 3;
 	}
 
 	public int getDefense() {
-		return heroClass.getBaseDefense();
+		return heroClass.getBaseDefense() + Math.floorDiv(Math.max(0, level), 3) * 2;
 	}
 
 	public int getHp() {

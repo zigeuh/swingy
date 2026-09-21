@@ -1,8 +1,10 @@
 package io.github.zigeuh.swingy.model;
 
+import io.github.zigeuh.swingy.model.enemy.Enemy;
+
 public class Game {
 
-	private Map map;
+	private final Map map;
 	private final Hero hero;
 
 	public Game(Hero hero) {

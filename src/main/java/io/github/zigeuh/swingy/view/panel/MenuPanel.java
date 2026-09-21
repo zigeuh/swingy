@@ -34,8 +34,8 @@ public class MenuPanel extends JPanel {
 		delete.setBackground(new Color(50, 50, 50));
 		delete.setOpaque(true);
 		delete.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder(Color.WHITE, 1),   // la bordure existante
-				BorderFactory.createEmptyBorder(5, 10, 5, 10)    // padding: haut, gauche, bas, droite
+				BorderFactory.createLineBorder(Color.WHITE, 1),
+				BorderFactory.createEmptyBorder(5, 10, 5, 10)
 		));
 		delete.addActionListener(e -> controller.deleteMenu());
 		delete.addMouseListener(new MouseAdapter() {

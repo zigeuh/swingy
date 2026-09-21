@@ -1,5 +1,8 @@
 package io.github.zigeuh.swingy.model;
 
+import io.github.zigeuh.swingy.model.enemy.Enemy;
+import io.github.zigeuh.swingy.model.enemy.EnemyFactory;
+
 import java.util.Random;
 
 public class Map {
@@ -28,7 +31,7 @@ public class Map {
 				if (x == mid && y == mid)
 					newMap[y][x] = null;
 				else
-					newMap[y][x] = rand.nextDouble() < enemyChance ? new Enemy("Test", 1, 1 ,1) : null;
+					newMap[y][x] = rand.nextDouble() < enemyChance ? EnemyFactory.createEnemy(level) : null;
 			}
 		}
 
