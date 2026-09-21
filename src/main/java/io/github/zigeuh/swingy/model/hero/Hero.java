@@ -1,5 +1,7 @@
 package io.github.zigeuh.swingy.model.hero;
 
+import io.github.zigeuh.swingy.model.XpTable;
+
 public class Hero {
 
 	private final String name;
@@ -40,9 +42,9 @@ public class Hero {
 		int requiredXp;
 
 		while ((requiredXp = getRequiredXp()) <= this.xp) {
+			this.xp -= requiredXp;
 			this.level++;
 			this.hp = getMaxHp();
-			this.xp -= requiredXp;
 		}
 	}
 
@@ -67,7 +69,7 @@ public class Hero {
 	}
 
 	public int getRequiredXp() {
-		return (int) (level * 1000 + Math.pow(level - 1, 2) * 450);
+		return XpTable.requiredFor(level + 1);
 	}
 
 	public int getMaxHp() {

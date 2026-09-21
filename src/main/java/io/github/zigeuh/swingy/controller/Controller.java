@@ -117,8 +117,13 @@ public class Controller {
 	}
 
 	public void move(Direction direction) {
-		boolean enemyDetected = game.move(direction);
-		if (enemyDetected) view.showStartBattle();
+		MoveResult result = game.move(direction);
+		if (result.win()) {
+			game.generateNewMap();
+			game.healHero();
+			view.refreshGame();
+		}
+		else if (result.enemy() != null) view.showStartBattle();
 		else view.refreshGame();
 	}
 

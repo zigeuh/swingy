@@ -19,6 +19,10 @@ public class Enemy {
 		return type;
 	}
 
+	public int getLevel() {
+		return level;
+	}
+
 	public String getName() {
 		return type.getName() + " Nv." + level;
 	}

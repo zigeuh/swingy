@@ -29,7 +29,7 @@ public class Battle {
 			enemyHp -= toEnemy;
 			rounds.add(new RoundLog(round, hero.getName(), toEnemy, heroHp, enemyHp));
 			if (enemyHp <= 0) {
-				return new BattleResult(true, rounds, 200, heroHp);
+				return new BattleResult(true, rounds, XpTable.forVictory(enemy), heroHp);
 			}
 
 			int toHero = damage(enemy.getAttack(), hero.getDefense());

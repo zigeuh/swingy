@@ -5,14 +5,22 @@ import io.github.zigeuh.swingy.model.hero.Hero;
 
 public class Game {
 
-	private final Map map;
 	private final Hero hero;
+	private Map map;
 	private Direction facing = Direction.SOUTH;
 
 	public Game(Hero hero) {
 		this.hero = hero;
 
 		this.map = new Map(hero.getLevel());
+	}
+
+	public void healHero() {
+		hero.setCurrentHp(hero.getMaxHp());
+	}
+
+	public void generateNewMap() {
+		map = new Map(hero.getLevel());
 	}
 
 	public Map getMap() {
@@ -27,17 +35,20 @@ public class Game {
 		return facing;
 	}
 
-	public boolean move(Direction direction) {
+	public MoveResult move(Direction direction) {
 		this.facing = direction;
 		Coordinates currentPos = map.getHeroPos();
 
 		int targetX = currentPos.x() + direction.getDx();
 		int targetY = currentPos.y() + direction.getDy();
 
+		if (targetX >= map.getGrid().length || targetX < 0 || targetY >= map.getGrid().length || targetY < 0)
+			return new MoveResult(true, null);
+
 		map.setHeroPos(targetX, targetY);
 
 		Enemy target = map.getGrid()[targetY][targetX];
-		return target != null;
+		return new MoveResult(false, target);
 	}
 
 	public BattleResult fight() {
