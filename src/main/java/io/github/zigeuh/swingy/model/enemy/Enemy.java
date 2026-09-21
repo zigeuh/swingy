@@ -15,6 +15,10 @@ public class Enemy {
 		this.type = type;
 	}
 
+	public EnemyType getType() {
+		return type;
+	}
+
 	public String getName() {
 		return type.getName() + " Nv." + level;
 	}

@@ -1,11 +1,10 @@
 package io.github.zigeuh.swingy.controller;
 
 import io.github.zigeuh.swingy.model.*;
-import io.github.zigeuh.swingy.model.heroclass.AHeroClass;
-import io.github.zigeuh.swingy.model.heroclass.HeroClassFactory;
+import io.github.zigeuh.swingy.model.hero.Hero;
+import io.github.zigeuh.swingy.model.hero.HeroClass;
 import io.github.zigeuh.swingy.view.View;
 
-import javax.swing.*;
 import java.util.Random;
 
 public class Controller {
@@ -94,7 +93,7 @@ public class Controller {
 		String formattedName = heroClassName.replace(" ", "_").toUpperCase();
 
 		System.out.println(formattedName);
-		AHeroClass heroClass = HeroClassFactory.createClass(formattedName);
+		HeroClass heroClass = HeroClass.valueOf(formattedName);
 		Hero hero = new Hero(name, heroClass, 0, 0);
 
 		startGame(hero);

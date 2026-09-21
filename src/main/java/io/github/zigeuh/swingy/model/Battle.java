@@ -1,6 +1,7 @@
 package io.github.zigeuh.swingy.model;
 
 import io.github.zigeuh.swingy.model.enemy.Enemy;
+import io.github.zigeuh.swingy.model.hero.Hero;
 
 import java.util.ArrayList;
 import java.util.List;

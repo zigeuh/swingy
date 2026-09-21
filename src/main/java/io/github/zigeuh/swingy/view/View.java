@@ -46,7 +46,7 @@ public class View extends JFrame {
 		add("save", savePanel);
 		add("delete", deletePanel);
 
-		this.setSize(750, 750);
+		this.setSize(1050, 750);
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 	}
@@ -69,6 +69,8 @@ public class View extends JFrame {
 			if (gamePanel != null) remove(gamePanel);
 			gamePanel = new GamePanel(game, controller);
 			add("game", gamePanel);
+		} else {
+			gamePanel.refresh();
 		}
 		cardLayout.show(getContentPane(), "game");
 	}
@@ -93,6 +95,6 @@ public class View extends JFrame {
 	}
 
 	public void refreshGame() {
-		if (gamePanel != null) gamePanel.repaint();
+		if (gamePanel != null) gamePanel.refresh();
 	}
 }

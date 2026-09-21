@@ -3,19 +3,38 @@ package io.github.zigeuh.swingy.view.panel;
 import io.github.zigeuh.swingy.controller.Controller;
 import io.github.zigeuh.swingy.model.*;
 import io.github.zigeuh.swingy.model.enemy.Enemy;
+import io.github.zigeuh.swingy.model.enemy.EnemyType;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
+import java.util.EnumMap;
 
 public class GamePanel extends JPanel {
 	private final Game game;
 	private final Controller controller;
+	private final MapCanvas mapCanvas;
+	private final StatsPanel statsPanel;
+	private final java.util.Map<Direction, Image> heroSprites = new EnumMap<>(Direction.class);
+	private final java.util.Map<EnemyType, Image> enemySprites = new EnumMap<>(EnemyType.class);
+	private String loadedFolder;
 	private static final int TILE_SIZE = 32;
 
 	public GamePanel(Game game, Controller controller) {
 		this.game = game;
 		this.controller = controller;
+
+		setLayout(new BorderLayout());
+		setBackground(Color.BLACK);
+
+		mapCanvas = new MapCanvas();
+		statsPanel = new StatsPanel();
+		statsPanel.setHero(game.getHero());
+
+		add(mapCanvas, BorderLayout.CENTER);
+		add(statsPanel, BorderLayout.EAST);
 
 		InputMap inputMap = getInputMap(WHEN_IN_FOCUSED_WINDOW);
 		ActionMap actionMap = getActionMap();
@@ -42,6 +61,11 @@ public class GamePanel extends JPanel {
 		return game;
 	}
 
+	public void refresh() {
+		statsPanel.setHero(game.getHero());
+		mapCanvas.repaint();
+	}
+
 	private Action moveAction(Direction direction) {
 		return new AbstractAction() {
 			@Override
@@ -51,45 +75,109 @@ public class GamePanel extends JPanel {
 		};
 	}
 
-	@Override
-	protected void paintComponent(Graphics g) {
-		super.paintComponent(g);
+	private Image heroSprite(Direction facing, String folder) {
+		if (!folder.equals(loadedFolder)) {
+			heroSprites.clear();
+			for (Direction dir : Direction.values()) {
+				Image img = loadSprite(folder + "/" + dir.name().toLowerCase() + ".png");
+				if (img != null) heroSprites.put(dir, img);
+			}
+			loadedFolder = folder;
+		}
+		return heroSprites.get(facing);
+	}
 
-		Map map = this.game.getMap();
+	private static Image loadSprite(String path) {
+		try (var stream = GamePanel.class.getResourceAsStream(path)) {
+			if (stream == null) return null;
+			return ImageIO.read(stream);
+		} catch (IOException e) {
+			return null;
+		}
+	}
 
-		Enemy[][] grid = map.getGrid();
-		if (grid == null || grid.length == 0 || grid[0].length == 0)
-			return;
+	private Image enemySprite(EnemyType type) {
+		if (!enemySprites.containsKey(type)) {
+			enemySprites.put(type, loadSprite(type.getSprite()));
+		}
+		return enemySprites.get(type);
+	}
 
-		int mapH = grid.length;
-		int mapW = grid[0].length;
+	private class MapCanvas extends JPanel {
+		MapCanvas() {
+			setBackground(Color.BLACK);
+		}
 
-		int visX = Math.min(getWidth()  / TILE_SIZE, mapW);
-		int visY = Math.min(getHeight() / TILE_SIZE, mapH);
-		if (visX <= 0 || visY <= 0)
-			return;
-
-		Coordinates hero = map.getHeroPos();
-
-		int camX = Math.clamp(hero.x() - visX / 2, 0, mapW - visX);
-		int camY = Math.clamp(hero.y() - visY / 2, 0, mapH - visY);
-
-		int offX = (getWidth()  - visX * TILE_SIZE) / 2;
-		int offY = (getHeight() - visY * TILE_SIZE) / 2;
-
-		for (int y = 0; y < visY; y++) {
-			for (int x = 0; x < visX; x++) {
-				int mapX = camX + x;
-				int mapY = camY + y;
-				int screenX = offX + x * TILE_SIZE;
-				int screenY = offY + y * TILE_SIZE;
-
-				if (hero.x() == mapX && hero.y() == mapY)
-					g.setColor(Color.GREEN);
-				else
-					g.setColor(grid[mapY][mapX] == null ? Color.GRAY : Color.RED);
-
+		private void drawSprite(Graphics g, Image sprite, int screenX, int screenY, Color invalid) {
+			if (sprite == null) {
+				g.setColor(invalid);
 				g.fillRect(screenX, screenY, TILE_SIZE, TILE_SIZE);
+			} else {
+				int width = sprite.getWidth(null);
+				int height = sprite.getHeight(null);
+				if (width <= 0 || height <= 0) {
+					g.drawImage(sprite, screenX, screenY, TILE_SIZE, TILE_SIZE, null);
+				} else {
+					int dw = Math.max(1, (int) Math.round((double) TILE_SIZE * width / height));
+					int dx = screenX + (TILE_SIZE - dw) / 2;
+					g.drawImage(sprite, dx, screenY, dw, TILE_SIZE, null);
+				}
+			}
+		}
+
+		@Override
+		protected void paintComponent(Graphics g) {
+			super.paintComponent(g);
+
+			Map map = game.getMap();
+
+			Enemy[][] grid = map.getGrid();
+			if (grid == null || grid.length == 0 || grid[0].length == 0)
+				return;
+
+			int mapH = grid.length;
+			int mapW = grid[0].length;
+
+			int visX = Math.min(getWidth()  / TILE_SIZE, mapW);
+			int visY = Math.min(getHeight() / TILE_SIZE, mapH);
+			if (visX <= 0 || visY <= 0)
+				return;
+
+			Coordinates hero = map.getHeroPos();
+
+			int camX = Math.clamp(hero.x() - visX / 2, 0, mapW - visX);
+			int camY = Math.clamp(hero.y() - visY / 2, 0, mapH - visY);
+
+			int offX = (getWidth()  - visX * TILE_SIZE) / 2;
+			int offY = (getHeight() - visY * TILE_SIZE) / 2;
+
+			for (int y = 0; y < visY; y++) {
+				for (int x = 0; x < visX; x++) {
+					int mapX = camX + x;
+					int mapY = camY + y;
+					int screenX = offX + x * TILE_SIZE;
+					int screenY = offY + y * TILE_SIZE;
+
+					if (hero.x() == mapX && hero.y() == mapY) {
+
+						g.setColor(Color.GRAY);
+						g.fillRect(screenX, screenY, TILE_SIZE, TILE_SIZE);
+
+						Image sprite = heroSprite(game.getFacing(), game.getHero().getHeroClass().getSpriteFolder());
+						drawSprite(g, sprite, screenX, screenY, Color.GREEN);
+
+					} else {
+						Enemy enemy = grid[mapY][mapX];
+
+						g.setColor(Color.GRAY);
+						g.fillRect(screenX, screenY, TILE_SIZE, TILE_SIZE);
+
+						if (enemy != null) {
+							Image sprite = enemySprite(enemy.getType());
+							drawSprite(g, sprite, screenX, screenY, Color.RED);
+						}
+					}
+				}
 			}
 		}
 	}

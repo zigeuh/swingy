@@ -1,11 +1,13 @@
 package io.github.zigeuh.swingy.model;
 
 import io.github.zigeuh.swingy.model.enemy.Enemy;
+import io.github.zigeuh.swingy.model.hero.Hero;
 
 public class Game {
 
 	private final Map map;
 	private final Hero hero;
+	private Direction facing = Direction.SOUTH;
 
 	public Game(Hero hero) {
 		this.hero = hero;
@@ -21,7 +23,12 @@ public class Game {
 		return this.hero;
 	}
 
+	public Direction getFacing() {
+		return facing;
+	}
+
 	public boolean move(Direction direction) {
+		this.facing = direction;
 		Coordinates currentPos = map.getHeroPos();
 
 		int targetX = currentPos.x() + direction.getDx();

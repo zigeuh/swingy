@@ -1,29 +1,33 @@
-package io.github.zigeuh.swingy.model;
-
-import io.github.zigeuh.swingy.model.heroclass.AHeroClass;
+package io.github.zigeuh.swingy.model.hero;
 
 public class Hero {
 
 	private final String name;
-	private final AHeroClass heroClass;
+	private final HeroClass heroClass;
 	private int hp;
 	private int level = 0;
 	private int xp = 0;
 
-	public Hero(String name, AHeroClass heroClass, int level, int xp) {
+	public Hero(String name, HeroClass heroClass, int level, int xp) {
+		this(name, heroClass, level, xp, heroClass.getBaseHp());
+	}
+
+	public Hero(String name, HeroClass heroClass, int level, int xp, int currentHp) {
 		this.name = name;
 		this.heroClass = heroClass;
-		this.hp = heroClass.getBaseHp();
+		if (level < 0) throw new IllegalArgumentException("level < 0");
+		if (xp < 0) throw new IllegalArgumentException("xp < 0");
 		this.level = level;
 		this.xp = xp;
+		this.hp = Math.clamp(currentHp, 0, getMaxHp());
 	}
 
 	public Hero(Hero hero) {
 		this.name = hero.getName();
 		this.heroClass = hero.getHeroClass();
-		this.hp = heroClass.getBaseHp();
 		this.level = hero.getLevel();
 		this.xp = hero.getXp();
+		this.hp = Math.clamp(hero.getHp(), 0, getMaxHp());
 	}
 
 	public void gainXp(int xp) {
@@ -33,9 +37,9 @@ public class Hero {
 
 		this.xp += xp;
 
-		int requiredXp = (int) (level * 1000 + Math.pow(level - 1, 2) * 450);
+		int requiredXp;
 
-		while (requiredXp <= this.xp) {
+		while ((requiredXp = getRequiredXp()) <= this.xp) {
 			this.level++;
 			this.hp = getMaxHp();
 			this.xp -= requiredXp;
@@ -43,14 +47,14 @@ public class Hero {
 	}
 
 	public void setCurrentHp(int hp) {
-		this.hp = hp;
+		this.hp = Math.clamp(hp, 0, getMaxHp());
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public AHeroClass getHeroClass() {
+	public HeroClass getHeroClass() {
 		return heroClass;
 	}
 
@@ -60,6 +64,10 @@ public class Hero {
 
 	public int getXp() {
 		return xp;
+	}
+
+	public int getRequiredXp() {
+		return (int) (level * 1000 + Math.pow(level - 1, 2) * 450);
 	}
 
 	public int getMaxHp() {

@@ -1,5 +1,7 @@
 package io.github.zigeuh.swingy.model;
 
+import io.github.zigeuh.swingy.model.hero.Hero;
+
 public class SaveSlot {
 
 	private final int slotNumber;

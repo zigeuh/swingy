@@ -1,7 +1,7 @@
 package io.github.zigeuh.swingy.model;
 
-import io.github.zigeuh.swingy.model.heroclass.AHeroClass;
-import io.github.zigeuh.swingy.model.heroclass.HeroClassFactory;
+import io.github.zigeuh.swingy.model.hero.Hero;
+import io.github.zigeuh.swingy.model.hero.HeroClass;
 
 import java.sql.*;
 
@@ -19,15 +19,16 @@ public class SaveManager {
 
 	public void save(int slot, Hero hero) {
 		try (Connection conn = DriverManager.getConnection(DB_URL)) {
-			String request = "MERGE INTO SAVES (slot, name, hero_class, level, xp)"
-					+ "KEY(SLOT) VALUES ( ?, ?, ?, ?, ? )";
+			String request = "MERGE INTO SAVES (slot, name, hero_class, level, xp, current_hp)"
+					+ " KEY(slot) VALUES (?, ?, ?, ?, ?, ?)";
 			PreparedStatement stmt = conn.prepareStatement(request);
 
 			stmt.setInt(1, slot);
 			stmt.setString(2, hero.getName());
-			stmt.setString(3, hero.getHeroClass().getName());
+			stmt.setString(3, hero.getHeroClass().name());
 			stmt.setInt(4, hero.getLevel());
 			stmt.setInt(5, hero.getXp());
+			stmt.setInt(6, hero.getHp());
 
 			stmt.executeUpdate();
 		} catch (SQLException e) {
@@ -61,11 +62,12 @@ public class SaveManager {
 			while (resultSet.next() && i < 3) {
 				int slot = resultSet.getInt("slot");
 				String name = resultSet.getString("name");
-				AHeroClass heroClass = HeroClassFactory.createClass(resultSet.getString("hero_class"));
+				HeroClass heroClass = HeroClass.valueOf(resultSet.getString("hero_class"));
 				int level = resultSet.getInt("level");
 				int xp = resultSet.getInt("xp");
+				int currentHp = resultSet.getInt("current_hp");
 
-				saveSlots[slot] = new SaveSlot(slot, true, new Hero(name, heroClass, level, xp), 0);
+				saveSlots[slot] = new SaveSlot(slot, true, new Hero(name, heroClass, level, xp, currentHp), 0);
 				i++;
 			}
 
@@ -89,7 +91,8 @@ public class SaveManager {
 				+ "name VARCHAR(50), "
 				+ "hero_class VARCHAR(30), "
 				+ "level INT, "
-				+ "xp INT"
+				+ "xp INT, "
+				+ "current_hp INT"
 				+ ")";
 
 		try (Connection conn = DriverManager.getConnection(DB_URL)) {

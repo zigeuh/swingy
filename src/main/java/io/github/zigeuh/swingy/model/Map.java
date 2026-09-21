@@ -23,7 +23,7 @@ public class Map {
 		Enemy[][] newMap = new Enemy[size][size];
 
 		Random rand = new Random();
-		double enemyChance = 0.1;
+		double enemyChance = 0.05;
 
 		int mid = Math.floorDiv(size, 2);
 		for (int y = 0; y < size; y++) {

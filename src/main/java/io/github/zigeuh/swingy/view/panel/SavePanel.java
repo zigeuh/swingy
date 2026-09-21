@@ -1,7 +1,7 @@
 package io.github.zigeuh.swingy.view.panel;
 
 import io.github.zigeuh.swingy.controller.Controller;
-import io.github.zigeuh.swingy.model.Hero;
+import io.github.zigeuh.swingy.model.hero.Hero;
 import io.github.zigeuh.swingy.model.SaveSlot;
 
 import javax.swing.*;
