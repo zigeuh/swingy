@@ -1,7 +1,8 @@
 package io.github.zigeuh.swingy.view.panel;
 
-import io.github.zigeuh.swingy.controller.Controller;
 import io.github.zigeuh.swingy.model.Map;
+import io.github.zigeuh.swingy.model.artifact.Artifact;
+import io.github.zigeuh.swingy.model.artifact.ArtifactType;
 import io.github.zigeuh.swingy.model.hero.Hero;
 
 import javax.swing.*;
@@ -20,6 +21,16 @@ public class StatsPanel extends JPanel {
 	private final JProgressBar hpBar = new JProgressBar(0, 100);
 	private final JLabel spriteLabel = new JLabel("Sprite", SwingConstants.CENTER);
 	private final JLabel mapSize = new JLabel("", SwingConstants.RIGHT);
+
+	private final JLabel weaponSprite = new JLabel("Sprite", SwingConstants.CENTER);
+	private final JLabel weaponName = new JLabel("", SwingConstants.LEFT);
+	private final JLabel weaponBonus = new JLabel("", SwingConstants.RIGHT);
+	private final JLabel armorSprite = new JLabel("Sprite", SwingConstants.CENTER);
+	private final JLabel armorName = new JLabel("", SwingConstants.LEFT);
+	private final JLabel armorBonus = new JLabel("", SwingConstants.RIGHT);
+	private final JLabel helmSprite = new JLabel("Sprite", SwingConstants.CENTER);
+	private final JLabel helmName = new JLabel("", SwingConstants.LEFT);
+	private final JLabel helmBonus = new JLabel("", SwingConstants.RIGHT);
 
 	private final Map map;
 
@@ -83,6 +94,19 @@ public class StatsPanel extends JPanel {
 		center.add(statRow("Defense", defenseValue));
 		center.add(statRow("Map size", mapSize));
 
+		center.add(Box.createVerticalStrut(10));
+		JLabel artifactsHeader = new JLabel("Artifacts", SwingConstants.CENTER);
+		artifactsHeader.setForeground(Color.WHITE);
+		artifactsHeader.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 18));
+		artifactsHeader.setAlignmentX(Component.CENTER_ALIGNMENT);
+		center.add(artifactsHeader);
+		center.add(Box.createVerticalStrut(10));
+		center.add(artifactRow("Weapon", weaponSprite, weaponName, weaponBonus));
+		center.add(Box.createVerticalStrut(10));
+		center.add(artifactRow("Armor", armorSprite, armorName, armorBonus));
+		center.add(Box.createVerticalStrut(10));
+		center.add(artifactRow("Helm", helmSprite, helmName, helmBonus));
+
 		add(center, BorderLayout.CENTER);
 	}
 
@@ -102,6 +126,9 @@ public class StatsPanel extends JPanel {
 		hpBar.setMaximum(Math.max(1, hero.getMaxHp()));
 		hpBar.setValue(Math.clamp(hero.getHp(), 0, hero.getMaxHp()));
 		mapSize.setText(map.getGrid()[0].length + "x" + map.getGrid().length);
+		setArtifactSlot(ArtifactType.WEAPON, hero.getWeapon(), weaponSprite, weaponName, weaponBonus);
+		setArtifactSlot(ArtifactType.ARMOR, hero.getArmor(), armorSprite, armorName, armorBonus);
+		setArtifactSlot(ArtifactType.HELM, hero.getHelm(), helmSprite, helmName, helmBonus);
 	}
 
 	public void setSpriteIcon(ImageIcon icon) {
@@ -121,8 +148,85 @@ public class StatsPanel extends JPanel {
 		}
 	}
 
-	private static JPanel statRow(String key, JLabel value) {
-		JPanel row = new JPanel(new BorderLayout());
+	private static JPanel artifactRow(String key, JLabel sprite, JLabel name, JLabel bonus) {
+		JPanel row = new JPanel(new BorderLayout(8, 0));
+		row.setOpaque(false);
+		row.setMaximumSize(new Dimension(240, 52));
+
+		sprite.setPreferredSize(new Dimension(48, 48));
+		sprite.setMaximumSize(new Dimension(48, 48));
+		sprite.setOpaque(true);
+		sprite.setBackground(Color.BLACK);
+		sprite.setForeground(Color.GRAY);
+		sprite.setFont(new Font("Arial", Font.ITALIC, 10));
+		sprite.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
+
+		JPanel text = new JPanel(new BorderLayout());
+		text.setOpaque(false);
+
+		JLabel keyLabel = new JLabel(key);
+		keyLabel.setForeground(Color.GRAY);
+		keyLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+
+		name.setForeground(Color.WHITE);
+		name.setFont(new Font("Arial", Font.BOLD, 12));
+
+		text.add(keyLabel, BorderLayout.NORTH);
+		text.add(name, BorderLayout.SOUTH);
+
+		bonus.setForeground(new Color(120, 255, 120));
+		bonus.setFont(new Font("Arial", Font.BOLD, 12));
+
+		row.add(sprite, BorderLayout.WEST);
+		row.add(text, BorderLayout.CENTER);
+		row.add(bonus, BorderLayout.EAST);
+		return row;
+	}
+
+	private static void setArtifactSlot(ArtifactType type, Artifact artifact, JLabel sprite, JLabel name, JLabel bonus) {
+		if (artifact == null) {
+			sprite.setIcon(null);
+			sprite.setText("—");
+			name.setText("Empty");
+			name.setForeground(Color.GRAY);
+			bonus.setText("");
+		} else {
+			ImageIcon icon = scaledIcon(artifact.getTemplate().getSprite(), 48);
+			if (icon == null) {
+				sprite.setIcon(null);
+				sprite.setText("Sprite");
+			} else {
+				sprite.setText("");
+				sprite.setIcon(icon);
+			}
+			name.setText(artifact.getName());
+			name.setForeground(Color.WHITE);
+			bonus.setText(statName(type) + " +" + artifact.bonus());
+			bonus.setToolTipText(statName(type) + " +" + artifact.bonus());
+		}
+	}
+
+	private static ImageIcon scaledIcon(String path, int box) {
+		var url = StatsPanel.class.getResource(path);
+		if (url == null) return null;
+		ImageIcon raw = new ImageIcon(url);
+		int w = Math.max(1, raw.getIconWidth());
+		int h = Math.max(1, raw.getIconHeight());
+		double scale = Math.min((double) box / w, (double) box / h);
+		int dw = Math.max(1, (int) Math.round(w * scale));
+		int dh = Math.max(1, (int) Math.round(h * scale));
+		return new ImageIcon(raw.getImage().getScaledInstance(dw, dh, Image.SCALE_SMOOTH));
+	}
+
+	private static String statName(ArtifactType type) {
+		return switch (type) {
+			case WEAPON -> "Attack";
+			case ARMOR -> "Defense";
+			case HELM -> "HP";
+		};
+	}
+
+	private static JPanel statRow(String key, JLabel value) {		JPanel row = new JPanel(new BorderLayout());
 		row.setOpaque(false);
 		row.setMaximumSize(new Dimension(240, 22));
 

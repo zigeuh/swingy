@@ -4,6 +4,7 @@ import io.github.zigeuh.swingy.controller.Controller;
 import io.github.zigeuh.swingy.model.BattleResult;
 import io.github.zigeuh.swingy.model.Game;
 import io.github.zigeuh.swingy.model.SaveSlot;
+import io.github.zigeuh.swingy.model.artifact.Artifact;
 import io.github.zigeuh.swingy.view.panel.*;
 
 import javax.swing.*;
@@ -20,6 +21,7 @@ public class View extends JFrame {
 	private final StartBattlePanel startBattlePanel;
 	private final BattleRecapPanel battleRecapPanel;
 	private final WinPanel winPanel;
+	private final LootPanel lootPanel;
 	private final SavePanel savePanel;
 	private final DeletePanel deletePanel;
 	private GamePanel gamePanel;
@@ -37,6 +39,7 @@ public class View extends JFrame {
 		startBattlePanel = new StartBattlePanel(controller);
 		battleRecapPanel = new BattleRecapPanel(controller);
 		winPanel = new WinPanel(controller);
+		lootPanel = new LootPanel(controller);
 		savePanel = new SavePanel(controller);
 		deletePanel = new DeletePanel(controller);
 
@@ -46,6 +49,7 @@ public class View extends JFrame {
 		add("startBattle", startBattlePanel);
 		add("battleRecap", battleRecapPanel);
 		add("win", winPanel);
+		add("loot", lootPanel);
 		add("save", savePanel);
 		add("delete", deletePanel);
 
@@ -99,6 +103,11 @@ public class View extends JFrame {
 
 	public void showWin() {
 		cardLayout.show(getContentPane(), "win");
+	}
+
+	public void showLoot(Artifact current, Artifact loot) {
+		lootPanel.setLoot(current, loot);
+		cardLayout.show(getContentPane(), "loot");
 	}
 
 	public void refreshGame() {

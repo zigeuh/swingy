@@ -1,5 +1,6 @@
 package io.github.zigeuh.swingy.model;
 
+import io.github.zigeuh.swingy.model.artifact.ArtifactFactory;
 import io.github.zigeuh.swingy.model.enemy.Enemy;
 import io.github.zigeuh.swingy.model.hero.Hero;
 
@@ -29,14 +30,14 @@ public class Battle {
 			enemyHp -= toEnemy;
 			rounds.add(new RoundLog(round, hero.getName(), toEnemy, heroHp, enemyHp));
 			if (enemyHp <= 0) {
-				return new BattleResult(true, rounds, XpTable.forVictory(enemy), heroHp);
+				return new BattleResult(true, rounds, ArtifactFactory.rollDrop(enemy), XpTable.forVictory(enemy), heroHp);
 			}
 
 			int toHero = damage(enemy.getAttack(), hero.getDefense());
 			heroHp -= toHero;
 			rounds.add(new RoundLog(round, enemy.getName(), toHero, heroHp, enemyHp));
 			if (heroHp <= 0) {
-				return new BattleResult(false, rounds, 0, 0);
+				return new BattleResult(false, rounds, null, 0, 0);
 			}
 
 			round++;

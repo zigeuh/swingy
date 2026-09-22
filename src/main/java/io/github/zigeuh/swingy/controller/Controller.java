@@ -1,6 +1,7 @@
 package io.github.zigeuh.swingy.controller;
 
 import io.github.zigeuh.swingy.model.*;
+import io.github.zigeuh.swingy.model.artifact.Artifact;
 import io.github.zigeuh.swingy.model.hero.Hero;
 import io.github.zigeuh.swingy.model.hero.HeroClass;
 import io.github.zigeuh.swingy.view.View;
@@ -134,8 +135,13 @@ public class Controller {
 
 	public void afterBattle() {
 		if (pendingResult != null && pendingResult.victory()) {
-			pendingResult = null;
-			view.showGame(game);
+			Artifact loot = pendingResult.loot();
+
+			if (loot != null) view.showLoot(game.getHero().getArtifactOf(loot.getType()), loot);
+			else {
+				pendingResult = null;
+				view.showGame(game);
+			}
 		} else {
 			pendingResult = null;
 			game = null;
@@ -151,6 +157,17 @@ public class Controller {
 
 	private void startGame(Hero hero) {
 		this.game = new Game(hero);
+		view.showGame(game);
+	}
+
+	public void keepLoot() {
+		game.getHero().equip(pendingResult.loot());
+		pendingResult = null;
+		view.showGame(game);
+	}
+
+	public void dropLoot() {
+		pendingResult = null;
 		view.showGame(game);
 	}
 }
