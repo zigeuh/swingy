@@ -121,7 +121,7 @@ public class Controller {
 		if (result.win()) {
 			game.generateNewMap();
 			game.healHero();
-			view.refreshGame();
+			view.showWin();
 		}
 		else if (result.enemy() != null) view.showStartBattle();
 		else view.refreshGame();

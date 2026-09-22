@@ -30,7 +30,7 @@ public class GamePanel extends JPanel {
 		setBackground(Color.BLACK);
 
 		mapCanvas = new MapCanvas();
-		statsPanel = new StatsPanel();
+		statsPanel = new StatsPanel(game.getMap());
 		statsPanel.setHero(game.getHero());
 
 		add(mapCanvas, BorderLayout.CENTER);

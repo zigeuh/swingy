@@ -1,5 +1,7 @@
 package io.github.zigeuh.swingy.view.panel;
 
+import io.github.zigeuh.swingy.controller.Controller;
+import io.github.zigeuh.swingy.model.Map;
 import io.github.zigeuh.swingy.model.hero.Hero;
 
 import javax.swing.*;
@@ -17,8 +19,13 @@ public class StatsPanel extends JPanel {
 	private final JLabel defenseValue = new JLabel("", SwingConstants.RIGHT);
 	private final JProgressBar hpBar = new JProgressBar(0, 100);
 	private final JLabel spriteLabel = new JLabel("Sprite", SwingConstants.CENTER);
+	private final JLabel mapSize = new JLabel("", SwingConstants.RIGHT);
 
-	public StatsPanel() {
+	private final Map map;
+
+	public StatsPanel(Map map) {
+		this.map = map;
+
 		setBackground(Color.BLACK);
 		setLayout(new BorderLayout());
 		setPreferredSize(new Dimension(280, 0));
@@ -74,6 +81,7 @@ public class StatsPanel extends JPanel {
 		center.add(Box.createVerticalStrut(5));
 		center.add(statRow("Attack", attackValue));
 		center.add(statRow("Defense", defenseValue));
+		center.add(statRow("Map size", mapSize));
 
 		add(center, BorderLayout.CENTER);
 	}
@@ -93,6 +101,7 @@ public class StatsPanel extends JPanel {
 		xpBar.setValue(Math.clamp(hero.getXp(), 0, hero.getRequiredXp()));
 		hpBar.setMaximum(Math.max(1, hero.getMaxHp()));
 		hpBar.setValue(Math.clamp(hero.getHp(), 0, hero.getMaxHp()));
+		mapSize.setText(map.getGrid()[0].length + "x" + map.getGrid().length);
 	}
 
 	public void setSpriteIcon(ImageIcon icon) {

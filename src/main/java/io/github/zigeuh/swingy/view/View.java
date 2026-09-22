@@ -19,6 +19,7 @@ public class View extends JFrame {
 	private final PausePanel pausePanel;
 	private final StartBattlePanel startBattlePanel;
 	private final BattleRecapPanel battleRecapPanel;
+	private final WinPanel winPanel;
 	private final SavePanel savePanel;
 	private final DeletePanel deletePanel;
 	private GamePanel gamePanel;
@@ -35,6 +36,7 @@ public class View extends JFrame {
 		pausePanel = new PausePanel(controller);
 		startBattlePanel = new StartBattlePanel(controller);
 		battleRecapPanel = new BattleRecapPanel(controller);
+		winPanel = new WinPanel(controller);
 		savePanel = new SavePanel(controller);
 		deletePanel = new DeletePanel(controller);
 
@@ -43,6 +45,7 @@ public class View extends JFrame {
 		add("pause", pausePanel);
 		add("startBattle", startBattlePanel);
 		add("battleRecap", battleRecapPanel);
+		add("win", winPanel);
 		add("save", savePanel);
 		add("delete", deletePanel);
 
@@ -92,6 +95,10 @@ public class View extends JFrame {
 	public void showDelete(SaveSlot[] slots) {
 		deletePanel.setSlots(slots);
 		cardLayout.show(getContentPane(), "delete");
+	}
+
+	public void showWin() {
+		cardLayout.show(getContentPane(), "win");
 	}
 
 	public void refreshGame() {
