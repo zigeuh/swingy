@@ -1,5 +1,7 @@
 package io.github.zigeuh.swingy.model;
 
+import io.github.zigeuh.swingy.model.artifact.Artifact;
+import io.github.zigeuh.swingy.model.artifact.ArtifactTemplate;
 import io.github.zigeuh.swingy.model.hero.Hero;
 import io.github.zigeuh.swingy.model.hero.HeroClass;
 
@@ -19,8 +21,8 @@ public class SaveManager {
 
 	public void save(int slot, Hero hero) {
 		try (Connection conn = DriverManager.getConnection(DB_URL)) {
-			String request = "MERGE INTO SAVES (slot, name, hero_class, level, xp, current_hp)"
-					+ " KEY(slot) VALUES (?, ?, ?, ?, ?, ?)";
+			String request = "MERGE INTO SAVES (slot, name, hero_class, level, xp, current_hp, weapon, armor, helm, weapon_bonus, armor_bonus, helm_bonus)"
+					+ " KEY(slot) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 			PreparedStatement stmt = conn.prepareStatement(request);
 
 			stmt.setInt(1, slot);
@@ -29,6 +31,16 @@ public class SaveManager {
 			stmt.setInt(4, hero.getLevel());
 			stmt.setInt(5, hero.getXp());
 			stmt.setInt(6, hero.getHp());
+
+			Artifact weapon = hero.getWeapon();
+			Artifact armor = hero.getArmor();
+			Artifact helm = hero.getHelm();
+			stmt.setString(7, weapon != null ? weapon.getTemplate().name() : "");
+			stmt.setString(8, armor != null ? armor.getTemplate().name() : "");
+			stmt.setString(9, helm != null ? helm.getTemplate().name() : "");
+			stmt.setInt(10,  weapon != null ? weapon.bonus(): 0);
+			stmt.setInt(11,  armor != null ? armor.bonus(): 0);
+			stmt.setInt(12,  helm != null ? helm.bonus(): 0);
 
 			stmt.executeUpdate();
 		} catch (SQLException e) {
@@ -67,7 +79,17 @@ public class SaveManager {
 				int xp = resultSet.getInt("xp");
 				int currentHp = resultSet.getInt("current_hp");
 
-				saveSlots[slot] = new SaveSlot(slot, true, new Hero(name, heroClass, level, xp, currentHp), 0);
+				String weaponName = resultSet.getString("weapon");
+				Artifact weapon = weaponName.isEmpty() ? null : new Artifact(ArtifactTemplate.valueOf(weaponName), resultSet.getInt("weapon_bonus"));
+
+				String armorName = resultSet.getString("armor");
+				Artifact armor = armorName.isEmpty() ? null : new Artifact(ArtifactTemplate.valueOf(armorName), resultSet.getInt("armor_bonus"));
+
+				String helmName = resultSet.getString("helm");
+				Artifact helm = helmName.isEmpty() ? null : new Artifact(ArtifactTemplate.valueOf(helmName), resultSet.getInt("helm_bonus"));
+
+				Hero hero = new Hero(name, heroClass, level, xp, currentHp, weapon, armor, helm);
+				saveSlots[slot] = new SaveSlot(slot, true, hero, 0);
 				i++;
 			}
 
@@ -92,7 +114,13 @@ public class SaveManager {
 				+ "hero_class VARCHAR(30), "
 				+ "level INT, "
 				+ "xp INT, "
-				+ "current_hp INT"
+				+ "current_hp INT,"
+				+ "weapon VARCHAR(30),"
+				+ "armor VARCHAR(30),"
+				+ "helm VARCHAR(30),"
+				+ "weapon_bonus INT,"
+				+ "armor_bonus INT,"
+				+ "helm_bonus INT"
 				+ ")";
 
 		try (Connection conn = DriverManager.getConnection(DB_URL)) {

@@ -15,11 +15,11 @@ public class Hero {
 	private Artifact armor;
 	private Artifact helm;
 
-	public Hero(String name, HeroClass heroClass, int level, int xp) {
-		this(name, heroClass, level, xp, heroClass.getBaseHp());
+	public Hero(String name, HeroClass heroClass) {
+		this(name, heroClass, 0, 0, heroClass.getBaseHp(), null, null, null);
 	}
 
-	public Hero(String name, HeroClass heroClass, int level, int xp, int currentHp) {
+	public Hero(String name, HeroClass heroClass, int level, int xp, int currentHp, Artifact weapon, Artifact armor, Artifact helm) {
 		this.name = name;
 		this.heroClass = heroClass;
 		if (level < 0) throw new IllegalArgumentException("level < 0");
@@ -27,6 +27,9 @@ public class Hero {
 		this.level = level;
 		this.xp = xp;
 		this.hp = Math.clamp(currentHp, 0, getMaxHp());
+		this.weapon = weapon;
+		this.armor = armor;
+		this.helm = helm;
 	}
 
 	public Hero(Hero hero) {

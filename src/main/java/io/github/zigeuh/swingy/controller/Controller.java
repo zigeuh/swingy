@@ -95,7 +95,7 @@ public class Controller {
 
 		System.out.println(formattedName);
 		HeroClass heroClass = HeroClass.valueOf(formattedName);
-		Hero hero = new Hero(name, heroClass, 0, 0);
+		Hero hero = new Hero(name, heroClass);
 
 		startGame(hero);
 	}
