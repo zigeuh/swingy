@@ -30,7 +30,7 @@ public class Battle {
 			enemyHp -= toEnemy;
 			rounds.add(new RoundLog(round, hero.getName(), toEnemy, heroHp, enemyHp));
 			if (enemyHp <= 0) {
-				return new BattleResult(true, rounds, ArtifactFactory.rollDrop(enemy), XpTable.forVictory(enemy), heroHp);
+				return new BattleResult(true, rounds, ArtifactFactory.rollDrop(hero, enemy), XpTable.forVictory(enemy), heroHp);
 			}
 
 			int toHero = damage(enemy.getAttack(), hero.getDefense());

@@ -117,7 +117,7 @@ public class StatsPanel extends JPanel {
 		nameValue.setText(hero.getName());
 		classValue.setText(hero.getHeroClass().getDisplayName());
 		levelValue.setText(String.valueOf(hero.getLevel()));
-		xpValue.setText(String.valueOf(hero.getXp()));
+		xpValue.setText(hero.getXp() + " / " + hero.getRequiredXp());
 		hpValue.setText(hero.getHp() + " / " + hero.getMaxHp());
 		attackValue.setText(String.valueOf(hero.getAttack()));
 		defenseValue.setText(String.valueOf(hero.getDefense()));
@@ -226,7 +226,8 @@ public class StatsPanel extends JPanel {
 		};
 	}
 
-	private static JPanel statRow(String key, JLabel value) {		JPanel row = new JPanel(new BorderLayout());
+	private static JPanel statRow(String key, JLabel value) {
+		JPanel row = new JPanel(new BorderLayout());
 		row.setOpaque(false);
 		row.setMaximumSize(new Dimension(240, 22));
 

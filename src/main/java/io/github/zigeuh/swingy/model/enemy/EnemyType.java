@@ -1,27 +1,27 @@
 package io.github.zigeuh.swingy.model.enemy;
 
 public enum EnemyType {
-	SHADOW("Shadow", "shadow.png", 1, 15, 7, 3) {
+	SHADOW("Shadow", "shadow.png", 1, 18, 9, 3) {
 		@Override public Enemy forLevel(int level) {
 			return new Enemy(this, level,
-					getBaseHp() + level * 6,
+					getBaseHp() + level * 4,
 					getBaseAttack() + level,
 					getBaseDefense() + level / 2);
 		}
 	},
-	LARGE_BODY("Large Body", "large_body.png", 3, 22, 9, 4) {
+	LARGE_BODY("Large Body", "large_body.png", 3, 26, 10, 4) {
 		@Override public Enemy forLevel(int level) {
 			return new Enemy(this, level,
-					getBaseHp() + level * 9,
+					getBaseHp() + level * 6,
 					getBaseAttack() + level,
 					getBaseDefense() + level / 3);
 		}
 	},
-	RED_NOCTURNE("Red Nocturne", "red_nocturne.png", 1, 12, 10, 2) {
+	RED_NOCTURNE("Red Nocturne", "red_nocturne.png", 1, 12, 11, 2) {
 		@Override public Enemy forLevel(int level) {
 			return new Enemy(this, level,
-					getBaseHp() + level * 4,
-					getBaseAttack() + level * 2,
+					getBaseHp() + level * 3,
+					getBaseAttack() + level,
 					getBaseDefense() + level / 5);
 		}
 	};

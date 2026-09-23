@@ -48,13 +48,18 @@ public class Hero {
 			throw new IllegalArgumentException("XP gain can't be negative");
 		}
 
+		if (level >= 20) {
+			return;
+		}
+
 		this.xp += xp;
 
 		int requiredXp;
 
 		while ((requiredXp = getRequiredXp()) <= this.xp) {
-			this.xp -= requiredXp;
 			this.level++;
+			if (level >= 20) this.xp = 0;
+			else this.xp -= requiredXp;
 			this.hp = getMaxHp();
 		}
 	}
