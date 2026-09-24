@@ -1,4 +1,4 @@
-package io.github.zigeuh.swingy.view.panel;
+package io.github.zigeuh.swingy.view.swing.panel;
 
 import io.github.zigeuh.swingy.controller.Controller;
 import io.github.zigeuh.swingy.model.hero.Hero;
@@ -9,17 +9,17 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class SavePanel extends JPanel {
+public class DeletePanel extends JPanel {
 	private final Controller controller;
 	private final JPanel slotList = new JPanel(new GridLayout(3, 1, 0, 10));
 
-	public SavePanel(Controller controller) {
+	public DeletePanel(Controller controller) {
 		this.controller = controller;
 
 		setBackground(Color.BLACK);
 		setLayout(new BorderLayout());
 
-		JLabel title = new JLabel("Save", SwingConstants.LEFT);
+		JLabel title = new JLabel("Delete", SwingConstants.LEFT);
 		title.setForeground(Color.WHITE);
 		title.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 32));
 		title.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0));
@@ -82,7 +82,7 @@ public class SavePanel extends JPanel {
 		box.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				controller.saveSlot(number);
+				controller.deleteSlot(number);
 			}
 
 			@Override

@@ -1,16 +1,17 @@
-package io.github.zigeuh.swingy.view;
+package io.github.zigeuh.swingy.view.swing;
 
 import io.github.zigeuh.swingy.controller.Controller;
 import io.github.zigeuh.swingy.model.BattleResult;
 import io.github.zigeuh.swingy.model.Game;
 import io.github.zigeuh.swingy.model.SaveSlot;
 import io.github.zigeuh.swingy.model.artifact.Artifact;
-import io.github.zigeuh.swingy.view.panel.*;
+import io.github.zigeuh.swingy.view.IView;
+import io.github.zigeuh.swingy.view.swing.panel.*;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class View extends JFrame {
+public class SwingView extends JFrame implements IView {
 
 	private final Controller controller;
 	private final CardLayout cardLayout;
@@ -26,7 +27,7 @@ public class View extends JFrame {
 	private final DeletePanel deletePanel;
 	private GamePanel gamePanel;
 
-	public View(Controller controller) {
+	public SwingView(Controller controller) {
 		super("Kingdom Hearts: Tessellated Hearts");
 
 		this.controller = controller;
@@ -58,19 +59,23 @@ public class View extends JFrame {
 		this.setLocationRelativeTo(null);
 	}
 
+	@Override
 	public void showMenu(SaveSlot[] slots) {
 		menuPanel.setSlots(slots);
 		cardLayout.show(getContentPane(), "menu");
 	}
 
+	@Override
 	public void showCreateHero() {
 		cardLayout.show(getContentPane(), "create");
 	}
 
+	@Override
 	public void showPause() {
 		cardLayout.show(getContentPane(), "pause");
 	}
 
+	@Override
 	public void showGame(Game game) {
 		if (gamePanel == null || gamePanel.getGame() != game) {
 			if (gamePanel != null) remove(gamePanel);
@@ -82,34 +87,41 @@ public class View extends JFrame {
 		cardLayout.show(getContentPane(), "game");
 	}
 
+	@Override
 	public void showStartBattle() {
 		cardLayout.show(getContentPane(), "startBattle");
 	}
 
+	@Override
 	public void showBattleResult(BattleResult result) {
 		battleRecapPanel.setResult(result);
 		cardLayout.show(getContentPane(), "battleRecap");
 	}
 
+	@Override
 	public void showSave(SaveSlot[] slots) {
 		savePanel.setSlots(slots);
 		cardLayout.show(getContentPane(), "save");
 	}
 
+	@Override
 	public void showDelete(SaveSlot[] slots) {
 		deletePanel.setSlots(slots);
 		cardLayout.show(getContentPane(), "delete");
 	}
 
+	@Override
 	public void showWin() {
 		cardLayout.show(getContentPane(), "win");
 	}
 
+	@Override
 	public void showLoot(Artifact current, Artifact loot) {
 		lootPanel.setLoot(current, loot);
 		cardLayout.show(getContentPane(), "loot");
 	}
 
+	@Override
 	public void refreshGame() {
 		if (gamePanel != null) gamePanel.refresh();
 	}

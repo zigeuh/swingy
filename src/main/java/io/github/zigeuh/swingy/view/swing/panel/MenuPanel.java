@@ -1,4 +1,4 @@
-package io.github.zigeuh.swingy.view.panel;
+package io.github.zigeuh.swingy.view.swing.panel;
 
 import io.github.zigeuh.swingy.controller.Controller;
 import io.github.zigeuh.swingy.model.hero.Hero;
@@ -9,21 +9,49 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class DeletePanel extends JPanel {
+public class MenuPanel extends JPanel {
+
 	private final Controller controller;
 	private final JPanel slotList = new JPanel(new GridLayout(3, 1, 0, 10));
 
-	public DeletePanel(Controller controller) {
+	public MenuPanel(Controller controller) {
 		this.controller = controller;
-
 		setBackground(Color.BLACK);
 		setLayout(new BorderLayout());
 
-		JLabel title = new JLabel("Delete", SwingConstants.LEFT);
+		JPanel header = new JPanel(new BorderLayout());
+		header.setOpaque(false);
+		header.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
+
+		JLabel title = new JLabel("Load", SwingConstants.LEFT);
 		title.setForeground(Color.WHITE);
 		title.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 32));
-		title.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0));
-		add(title, BorderLayout.NORTH);
+		header.add(title, BorderLayout.WEST);
+
+		JButton delete = new JButton("Delete");
+		delete.setFont(new Font("Arial", Font.BOLD, 20));
+		delete.setForeground(Color.WHITE);
+		delete.setBackground(new Color(50, 50, 50));
+		delete.setOpaque(true);
+		delete.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createLineBorder(Color.WHITE, 1),
+				BorderFactory.createEmptyBorder(5, 10, 5, 10)
+		));
+		delete.addActionListener(e -> controller.deleteMenu());
+		delete.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				delete.setBackground(new Color(41, 98, 255));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				delete.setBackground(new Color(50, 50, 50));
+			}
+		});
+		header.add(delete, BorderLayout.EAST);
+
+		add(header, BorderLayout.NORTH);
 
 		slotList.setOpaque(false);
 		slotList.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -45,7 +73,7 @@ public class DeletePanel extends JPanel {
 		Hero hero = slot.getHero();
 		JPanel box = createSlotBox(slot.getSlotNumber());
 
-		JLabel title = new JLabel("Slot " + (slot.getSlotNumber() + 1)  + " — " + hero.getName());
+		JLabel title = new JLabel("Slot " + (slot.getSlotNumber() + 1) + " — " + hero.getName());
 		title.setFont(new Font("Arial", Font.BOLD, 18));
 		title.setForeground(Color.WHITE);
 		box.add(title, BorderLayout.NORTH);
@@ -82,7 +110,7 @@ public class DeletePanel extends JPanel {
 		box.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				controller.deleteSlot(number);
+				controller.chooseSlot(number);
 			}
 
 			@Override

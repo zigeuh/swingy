@@ -1,0 +1,32 @@
+package io.github.zigeuh.swingy.view;
+
+import io.github.zigeuh.swingy.model.BattleResult;
+import io.github.zigeuh.swingy.model.Game;
+import io.github.zigeuh.swingy.model.SaveSlot;
+import io.github.zigeuh.swingy.model.artifact.Artifact;
+
+public interface IView {
+
+	void showMenu(SaveSlot[] slots);
+
+	void showCreateHero();
+
+	void showPause();
+
+	void showGame(Game game);
+
+	void showStartBattle();
+
+	void showBattleResult(BattleResult result);
+
+	void showSave(SaveSlot[] slots);
+
+	void showDelete(SaveSlot[] slots);
+
+	void showWin();
+
+	void showLoot(Artifact current, Artifact loot);
+
+	void refreshGame();
+
+}

@@ -1,4 +1,4 @@
-package io.github.zigeuh.swingy.view.panel;
+package io.github.zigeuh.swingy.view.swing.panel;
 
 import io.github.zigeuh.swingy.controller.Controller;
 

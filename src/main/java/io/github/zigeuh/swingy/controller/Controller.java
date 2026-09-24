@@ -4,13 +4,13 @@ import io.github.zigeuh.swingy.model.*;
 import io.github.zigeuh.swingy.model.artifact.Artifact;
 import io.github.zigeuh.swingy.model.hero.Hero;
 import io.github.zigeuh.swingy.model.hero.HeroClass;
-import io.github.zigeuh.swingy.view.View;
+import io.github.zigeuh.swingy.view.swing.SwingView;
 
 import java.util.Random;
 
 public class Controller {
 
-	private final View view;
+	private final SwingView view;
 	private Game game;
 	private BattleResult pendingResult;
 	private SaveSlot[] slots;
@@ -18,7 +18,7 @@ public class Controller {
 
 	public Controller() {
 		this.saveManager = new SaveManager();
-		this.view = new View(this);
+		this.view = new SwingView(this);
 	}
 
 	public void start() {
@@ -40,7 +40,7 @@ public class Controller {
 		return this.slots;
 	}
 
-	public View getView() {
+	public SwingView getView() {
 		return this.view;
 	}
 
