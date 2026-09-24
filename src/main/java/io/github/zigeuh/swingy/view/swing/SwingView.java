@@ -57,6 +57,7 @@ public class SwingView extends JFrame implements IView {
 		this.setSize(1050, 750);
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
+		this.setVisible(true);
 	}
 
 	@Override

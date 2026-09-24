@@ -5,11 +5,14 @@ import io.github.zigeuh.swingy.model.artifact.ArtifactTemplate;
 import io.github.zigeuh.swingy.model.hero.Hero;
 import io.github.zigeuh.swingy.model.hero.HeroClass;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.*;
 
 public class SaveManager {
 
-	private static final String DB_URL = "jdbc:h2:./saves/game;AUTO_SERVER=TRUE";
+	private static final String DB_DIR = System.getProperty("user.home") + "/.swingy/saves";
+	private static final String DB_URL = "jdbc:h2:" + DB_DIR + "/game;AUTO_SERVER=TRUE";
 
 	public SaveManager() {
 		try {
@@ -63,6 +66,8 @@ public class SaveManager {
 
 	public SaveSlot[] load() {
 
+		System.out.println("LOAD");
+
 		SaveSlot[] saveSlots = new SaveSlot[3];
 
 		try (Connection conn = DriverManager.getConnection(DB_URL)) {
@@ -95,11 +100,11 @@ public class SaveManager {
 
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
-			return null;
 		}
 
 		for (int i = 0; i < 3; i++) {
 			if (saveSlots[i] == null) {
+				System.out.println("slot " + i + " null");
 				saveSlots[i] = new SaveSlot(i, false, null, 0);
 			}
 		}
@@ -108,6 +113,11 @@ public class SaveManager {
 	}
 
 	private void initDatabase() throws SQLException {
+		try {
+			Files.createDirectories(Path.of(DB_DIR));
+		} catch (Exception e) {
+			throw new SQLException("Cannot create save directory: " + DB_DIR, e);
+		}
 		String sqlSaves = "CREATE TABLE IF NOT EXISTS saves ("
 				+ "slot INT PRIMARY KEY, "
 				+ "name VARCHAR(50), "
