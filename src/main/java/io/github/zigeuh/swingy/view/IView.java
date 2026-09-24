@@ -4,6 +4,7 @@ import io.github.zigeuh.swingy.model.BattleResult;
 import io.github.zigeuh.swingy.model.Game;
 import io.github.zigeuh.swingy.model.SaveSlot;
 import io.github.zigeuh.swingy.model.artifact.Artifact;
+import io.github.zigeuh.swingy.model.enemy.Enemy;
 
 public interface IView {
 
@@ -15,7 +16,7 @@ public interface IView {
 
 	void showGame(Game game);
 
-	void showStartBattle();
+	void showStartBattle(Enemy enemy);
 
 	void showBattleResult(BattleResult result);
 

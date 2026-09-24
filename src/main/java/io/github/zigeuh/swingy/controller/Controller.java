@@ -4,13 +4,13 @@ import io.github.zigeuh.swingy.model.*;
 import io.github.zigeuh.swingy.model.artifact.Artifact;
 import io.github.zigeuh.swingy.model.hero.Hero;
 import io.github.zigeuh.swingy.model.hero.HeroClass;
-import io.github.zigeuh.swingy.view.swing.SwingView;
+import io.github.zigeuh.swingy.view.IView;
 
 import java.util.Random;
 
 public class Controller {
 
-	private final SwingView view;
+	private IView view;
 	private Game game;
 	private BattleResult pendingResult;
 	private SaveSlot[] slots;
@@ -18,17 +18,11 @@ public class Controller {
 
 	public Controller() {
 		this.saveManager = new SaveManager();
-		this.view = new SwingView(this);
 	}
 
 	public void start() {
 		SaveSlot[] saveSlots = loadSaves();
-		view.setVisible(true);
 		view.showMenu(saveSlots);
-	}
-
-	public void save(int slot, Hero hero) {
-		saveManager.save(slot, hero);
 	}
 
 	public void saveMenu() {
@@ -40,7 +34,7 @@ public class Controller {
 		return this.slots;
 	}
 
-	public SwingView getView() {
+	public IView getView() {
 		return this.view;
 	}
 
@@ -52,7 +46,6 @@ public class Controller {
 		SaveSlot slot = this.slots[slotId];
 
 		if (slot.isOccupied()) {
-			System.out.println("Loading hero: " + slot.getHero().getHeroClass() + " " + slot.getHero().getName());
 			startGame(new Hero(slot.getHero()));
 		}
 		else {
@@ -66,7 +59,7 @@ public class Controller {
 		}
 
 		saveManager.delete(slotId);
-		slots[slotId] = new SaveSlot(slotId, false, null, 0);
+		slots[slotId] = new SaveSlot(slotId, false, null);
 
 		view.showMenu(slots);
 	}
@@ -78,8 +71,8 @@ public class Controller {
 
 		if (game == null) throw new RuntimeException("Tried to save while no game is started");
 
-		save(slotId, game.getHero());
-		slots[slotId] = new SaveSlot(slotId, true, game.getHero(), 0);
+		saveManager.save(slotId, game.getHero());
+		slots[slotId] = new SaveSlot(slotId, true, new Hero(game.getHero()));
 
 		view.showGame(game);
 	}
@@ -89,11 +82,8 @@ public class Controller {
 	}
 
 	public void createCharacter(String name, String heroClassName) {
-		System.out.println(("Creating the " + heroClassName + " " + name));
-
 		String formattedName = heroClassName.replace(" ", "_").toUpperCase();
 
-		System.out.println(formattedName);
 		HeroClass heroClass = HeroClass.valueOf(formattedName);
 		Hero hero = new Hero(name, heroClass);
 
@@ -117,6 +107,10 @@ public class Controller {
 		view.showMenu(slots);
 	}
 
+	public void quit() {
+		System.exit(0);
+	}
+
 	public void move(Direction direction) {
 		MoveResult result = game.move(direction);
 		if (result.win()) {
@@ -124,7 +118,7 @@ public class Controller {
 			game.healHero();
 			view.showWin();
 		}
-		else if (result.enemy() != null) view.showStartBattle();
+		else if (result.enemy() != null) view.showStartBattle(result.enemy());
 		else view.refreshGame();
 	}
 
@@ -169,5 +163,9 @@ public class Controller {
 	public void dropLoot() {
 		pendingResult = null;
 		view.showGame(game);
+	}
+
+	public void setView(IView view) {
+		this.view = view;
 	}
 }

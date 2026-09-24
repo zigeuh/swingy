@@ -65,9 +65,6 @@ public class SaveManager {
 	}
 
 	public SaveSlot[] load() {
-
-		System.out.println("LOAD");
-
 		SaveSlot[] saveSlots = new SaveSlot[3];
 
 		try (Connection conn = DriverManager.getConnection(DB_URL)) {
@@ -94,7 +91,7 @@ public class SaveManager {
 				Artifact helm = helmName.isEmpty() ? null : new Artifact(ArtifactTemplate.valueOf(helmName), resultSet.getInt("helm_bonus"));
 
 				Hero hero = new Hero(name, heroClass, level, xp, currentHp, weapon, armor, helm);
-				saveSlots[slot] = new SaveSlot(slot, true, hero, 0);
+				saveSlots[slot] = new SaveSlot(slot, true, hero);
 				i++;
 			}
 
@@ -104,8 +101,7 @@ public class SaveManager {
 
 		for (int i = 0; i < 3; i++) {
 			if (saveSlots[i] == null) {
-				System.out.println("slot " + i + " null");
-				saveSlots[i] = new SaveSlot(i, false, null, 0);
+				saveSlots[i] = new SaveSlot(i, false, null);
 			}
 		}
 

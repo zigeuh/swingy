@@ -1,6 +1,7 @@
 package io.github.zigeuh.swingy.view.swing.panel;
 
 import io.github.zigeuh.swingy.controller.Controller;
+import io.github.zigeuh.swingy.view.swing.panel.utils.CustomComponent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,22 +11,17 @@ public class PausePanel extends JPanel {
 
 	public PausePanel(Controller controller) {
 		this.controller = controller;
+		setBackground(Color.BLACK);
 
 		JLabel title = new JLabel("Pause");
 
-		JButton resume = new JButton("Resume");
-		JButton save = new JButton("Save");
-		JButton backToMenu = new JButton("Return to main-menu");
+		JButton resume = CustomComponent.createButton("Resume", controller::resume);
+		JButton save = CustomComponent.createButton("Save", controller::saveMenu);
+		JButton backToMenu = CustomComponent.createButton("Return to main-menu", controller::backToMenu);
 
 		title.setHorizontalAlignment(SwingConstants.CENTER);
-		resume.setHorizontalAlignment(SwingConstants.CENTER);
-		save.setHorizontalAlignment(SwingConstants.CENTER);
-		backToMenu.setHorizontalAlignment(SwingConstants.CENTER);
-
-		title.setFont(new Font("Arial", Font.PLAIN, 30));
-		resume.setFont(new Font("Arial", Font.PLAIN, 20));
-		save.setFont(new Font("Arial", Font.PLAIN, 20));
-		backToMenu.setFont(new Font("Arial", Font.PLAIN, 20));
+		title.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 30));
+		title.setForeground(Color.WHITE);
 
 		setLayout(new GridBagLayout());
 
@@ -48,11 +44,5 @@ public class PausePanel extends JPanel {
 
 		c.gridy = 3;
 		add(backToMenu, c);
-
-		resume.addActionListener(e -> controller.resume());
-
-		save.addActionListener(e -> controller.saveMenu());
-
-		backToMenu.addActionListener(e -> controller.backToMenu());
 	}
 }

@@ -7,13 +7,11 @@ public class SaveSlot {
 	private final int slotNumber;
 	private final boolean occupied;
 	private final Hero hero;
-	private int playTimeSeconds;
 
-	public SaveSlot(int slotNumber, boolean occupied, Hero hero, int playTimeSeconds) {
+	public SaveSlot(int slotNumber, boolean occupied, Hero hero) {
 		this.slotNumber = slotNumber;
 		this.occupied = occupied;
 		this.hero = hero;
-		this.playTimeSeconds = playTimeSeconds;
 	}
 
 	public int getSlotNumber() {

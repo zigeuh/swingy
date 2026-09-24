@@ -1,6 +1,7 @@
 package io.github.zigeuh.swingy.view.swing.panel;
 
 import io.github.zigeuh.swingy.controller.Controller;
+import io.github.zigeuh.swingy.view.swing.panel.utils.CustomComponent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,16 +11,16 @@ public class WinPanel extends JPanel {
 
 	public WinPanel(Controller controller) {
 		this.controller = controller;
+		setBackground(Color.BLACK);
 
 		JLabel title = new JLabel("You win!");
 
-		JButton save = new JButton("Save");
+		JButton continuee = CustomComponent.createButton("Continue", controller::resume);
+		JButton save = CustomComponent.createButton("Save", controller::saveMenu);
 
 		title.setHorizontalAlignment(SwingConstants.CENTER);
-		save.setHorizontalAlignment(SwingConstants.CENTER);
-
-		title.setFont(new Font("Arial", Font.PLAIN, 30));
-		save.setFont(new Font("Arial", Font.PLAIN, 20));
+		title.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 30));
+		title.setForeground(Color.WHITE);
 
 		setLayout(new GridBagLayout());
 
@@ -33,9 +34,10 @@ public class WinPanel extends JPanel {
 
 		c.gridy = 1;
 		c.ipady = 10;
-		c.insets = new Insets(20, 0, 0, 0);
-		add(save, c);
+		c.insets = new Insets(0, 0, 0, 0);
+		add(continuee, c);
 
-		save.addActionListener(e -> controller.saveMenu());
+		c.gridy = 2;
+		add(save, c);
 	}
 }

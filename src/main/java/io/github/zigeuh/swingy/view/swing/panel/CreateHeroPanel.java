@@ -1,6 +1,7 @@
 package io.github.zigeuh.swingy.view.swing.panel;
 
 import io.github.zigeuh.swingy.controller.Controller;
+import io.github.zigeuh.swingy.view.swing.panel.utils.CustomComponent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,6 +11,7 @@ public class CreateHeroPanel extends JPanel {
 
 	public CreateHeroPanel(Controller controller) {
 		this.controller = controller;
+		setBackground(Color.BLACK);
 
 		JLabel title = new JLabel("Create your character");
 
@@ -22,27 +24,41 @@ public class CreateHeroPanel extends JPanel {
 		heroClassInput.addItem("Wizard");
 		heroClassInput.addItem("Defender");
 
-		JButton create = new JButton("Create");
-		JButton cancel = new JButton("Cancel");
+		JButton create = CustomComponent.createButton("Create", () -> controller.createCharacter(
+				nameInput.getText(),
+				(String) heroClassInput.getSelectedItem()
+		));
+		JButton cancel = CustomComponent.createButton("Create", controller::cancelCreation);
 
 		title.setHorizontalAlignment(SwingConstants.CENTER);
 		name.setHorizontalAlignment(SwingConstants.RIGHT);
 		nameInput.setHorizontalAlignment(SwingConstants.CENTER);
 		heroClass.setHorizontalAlignment(SwingConstants.RIGHT);
-		create.setHorizontalAlignment(SwingConstants.CENTER);
-		cancel.setHorizontalAlignment(SwingConstants.CENTER);
 
 		DefaultListCellRenderer renderer = new DefaultListCellRenderer();
 		renderer.setHorizontalAlignment(DefaultListCellRenderer.CENTER);
+		renderer.setBackground(new Color(50, 50, 50));
+		renderer.setForeground(Color.WHITE);
 		heroClassInput.setRenderer(renderer);
 
-		title.setFont(new Font("Arial", Font.PLAIN, 30));
+		title.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 30));
 		name.setFont(new Font("Arial", Font.PLAIN, 20));
 		nameInput.setFont(new Font("Arial", Font.PLAIN, 20));
 		heroClass.setFont(new Font("Arial", Font.PLAIN, 20));
 		heroClassInput.setFont(new Font("Arial", Font.PLAIN, 20));
-		create.setFont(new Font("Arial", Font.PLAIN, 20));
-		cancel.setFont(new Font("Arial", Font.PLAIN, 20));
+
+		title.setForeground(Color.WHITE);
+		name.setForeground(Color.WHITE);
+		heroClass.setForeground(Color.WHITE);
+
+		nameInput.setBackground(new Color(50, 50, 50));
+		nameInput.setForeground(Color.WHITE);
+		nameInput.setCaretColor(Color.WHITE);
+		nameInput.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
+
+		heroClassInput.setBackground(new Color(50, 50, 50));
+		heroClassInput.setForeground(Color.WHITE);
+		heroClassInput.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
 
 		setLayout(new GridBagLayout());
 
@@ -83,11 +99,5 @@ public class CreateHeroPanel extends JPanel {
 		c.gridy = 4;
 		c.insets = new Insets(0, 0, 0, 0);
 		add(cancel, c);
-
-		create.addActionListener(e -> controller.createCharacter(
-				nameInput.getText(),
-				(String) heroClassInput.getSelectedItem()));
-		cancel.addActionListener(e -> controller.cancelCreation());
 	}
-
 }

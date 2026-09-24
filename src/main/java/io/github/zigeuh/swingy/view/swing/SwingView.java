@@ -5,6 +5,7 @@ import io.github.zigeuh.swingy.model.BattleResult;
 import io.github.zigeuh.swingy.model.Game;
 import io.github.zigeuh.swingy.model.SaveSlot;
 import io.github.zigeuh.swingy.model.artifact.Artifact;
+import io.github.zigeuh.swingy.model.enemy.Enemy;
 import io.github.zigeuh.swingy.view.IView;
 import io.github.zigeuh.swingy.view.swing.panel.*;
 
@@ -55,6 +56,7 @@ public class SwingView extends JFrame implements IView {
 		add("delete", deletePanel);
 
 		this.setSize(1050, 750);
+		this.setMinimumSize(new Dimension(1050, 750));
 		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
@@ -89,7 +91,8 @@ public class SwingView extends JFrame implements IView {
 	}
 
 	@Override
-	public void showStartBattle() {
+	public void showStartBattle(Enemy enemy) {
+		startBattlePanel.setEnemy(enemy);
 		cardLayout.show(getContentPane(), "startBattle");
 	}
 

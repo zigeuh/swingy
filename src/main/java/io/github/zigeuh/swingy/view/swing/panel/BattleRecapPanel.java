@@ -3,13 +3,11 @@ package io.github.zigeuh.swingy.view.swing.panel;
 import io.github.zigeuh.swingy.controller.Controller;
 import io.github.zigeuh.swingy.model.BattleResult;
 import io.github.zigeuh.swingy.model.RoundLog;
+import io.github.zigeuh.swingy.view.swing.panel.utils.CustomComponent;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.List;
-import java.util.Objects;
 
 public class BattleRecapPanel extends JPanel {
 
@@ -18,15 +16,15 @@ public class BattleRecapPanel extends JPanel {
 	private final JLabel summary = new JLabel("", SwingConstants.CENTER);
 	private final DefaultListModel<String> listModel = new DefaultListModel<>();
 	private final JList<String> logList = new JList<>(listModel);
-	private final JButton nextButton = new JButton("Next >");
-	private final JButton skipButton = new JButton("Skip >>");
-	private final JButton continueButton = new JButton("Continue");
+	private final JButton nextButton = CustomComponent.createButton("Next >", this::showNext);
+	private final JButton skipButton = CustomComponent.createButton("Skip >>", this::showAll);
+	private final JButton continueButton;
 
 	private BattleResult current;
 	private int shown;
 
 	public BattleRecapPanel(Controller controller) {
-		this.controller = Objects.requireNonNull(controller);
+		this.controller = controller;
 		setBackground(Color.BLACK);
 		setLayout(new BorderLayout());
 
@@ -49,7 +47,6 @@ public class BattleRecapPanel extends JPanel {
 		box.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createLineBorder(Color.WHITE, 1),
 				BorderFactory.createEmptyBorder(15, 15, 15, 15)));
-		box.setPreferredSize(new Dimension(500, 450));
 
 		summary.setForeground(Color.WHITE);
 		summary.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -67,12 +64,7 @@ public class BattleRecapPanel extends JPanel {
 		wrapper.add(box);
 		add(wrapper, BorderLayout.CENTER);
 
-		styleButton(nextButton);
-		styleButton(skipButton);
-		styleButton(continueButton);
-		nextButton.addActionListener(e -> showNext());
-		skipButton.addActionListener(e -> showAll());
-		continueButton.addActionListener(e -> this.controller.afterBattle());
+		continueButton = CustomComponent.createButton("Continue", controller::afterBattle);
 
 		JPanel footer = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
 		footer.setOpaque(false);
@@ -84,7 +76,7 @@ public class BattleRecapPanel extends JPanel {
 	}
 
 	public void setResult(BattleResult result) {
-		this.current = Objects.requireNonNull(result);
+		this.current = result;
 		this.shown = 0;
 		title.setText(result.victory() ? "Victory !" : "Defeat...");
 		title.setForeground(result.victory() ? new Color(120, 255, 120) : new Color(255, 120, 120));
@@ -137,26 +129,5 @@ public class BattleRecapPanel extends JPanel {
 				+ " deals " + round.damage() + " dmg"
 				+ " (hero: " + round.heroHpLeft()
 				+ ", enemy: " + round.enemyHpLeft() + ")";
-	}
-
-	private static void styleButton(JButton button) {
-		button.setFont(new Font("Arial", Font.BOLD, 20));
-		button.setForeground(Color.WHITE);
-		button.setBackground(new Color(50, 50, 50));
-		button.setOpaque(true);
-		button.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder(Color.WHITE, 1),
-				BorderFactory.createEmptyBorder(5, 10, 5, 10)));
-		button.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				button.setBackground(new Color(41, 98, 255));
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				button.setBackground(new Color(50, 50, 50));
-			}
-		});
 	}
 }

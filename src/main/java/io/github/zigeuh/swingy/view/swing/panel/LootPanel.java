@@ -3,17 +3,14 @@ package io.github.zigeuh.swingy.view.swing.panel;
 import io.github.zigeuh.swingy.controller.Controller;
 import io.github.zigeuh.swingy.model.artifact.Artifact;
 import io.github.zigeuh.swingy.model.artifact.ArtifactType;
+import io.github.zigeuh.swingy.view.swing.panel.utils.CustomComponent;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.Objects;
 
 public class LootPanel extends JPanel {
 
 	private final Controller controller;
-	private final JLabel title = new JLabel("Loot !", SwingConstants.LEFT);
 
 	private final JLabel currentSprite = new JLabel("Sprite", SwingConstants.CENTER);
 	private final JLabel currentName = new JLabel("", SwingConstants.CENTER);
@@ -25,11 +22,8 @@ public class LootPanel extends JPanel {
 	private final JLabel lootStat = new JLabel("", SwingConstants.CENTER);
 	private final JLabel lootDelta = new JLabel("", SwingConstants.CENTER);
 
-	private final JButton keepButton = new JButton("Keep");
-	private final JButton dropButton = new JButton("Drop");
-
 	public LootPanel(Controller controller) {
-		this.controller = Objects.requireNonNull(controller);
+		this.controller = controller;
 		setBackground(Color.BLACK);
 		setLayout(new BorderLayout());
 
@@ -37,6 +31,7 @@ public class LootPanel extends JPanel {
 		header.setOpaque(false);
 		header.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
 
+		JLabel title = new JLabel("Loot !", SwingConstants.LEFT);
 		title.setForeground(Color.WHITE);
 		title.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 32));
 		header.add(title, BorderLayout.WEST);
@@ -68,10 +63,8 @@ public class LootPanel extends JPanel {
 
 		box.add(cards, BorderLayout.CENTER);
 
-		styleButton(keepButton);
-		styleButton(dropButton);
-		keepButton.addActionListener(e -> this.controller.keepLoot());
-		dropButton.addActionListener(e -> this.controller.dropLoot());
+		JButton keepButton = CustomComponent.createButton("Keep", controller::keepLoot);
+		JButton dropButton = CustomComponent.createButton("Drop", controller::dropLoot);
 
 		JPanel footer = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
 		footer.setOpaque(false);
@@ -85,8 +78,6 @@ public class LootPanel extends JPanel {
 	}
 
 	public void setLoot(Artifact current, Artifact loot) {
-		Objects.requireNonNull(loot);
-
 		setSlotIcon(lootSprite, loot);
 		lootName.setText(loot.getName());
 		lootStat.setText(statLine(loot));
@@ -195,26 +186,5 @@ public class LootPanel extends JPanel {
 			case ARMOR -> "Defense";
 			case HELM -> "HP";
 		};
-	}
-
-	private static void styleButton(JButton button) {
-		button.setFont(new Font("Arial", Font.BOLD, 20));
-		button.setForeground(Color.WHITE);
-		button.setBackground(new Color(50, 50, 50));
-		button.setOpaque(true);
-		button.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder(Color.WHITE, 1),
-				BorderFactory.createEmptyBorder(5, 10, 5, 10)));
-		button.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				button.setBackground(new Color(41, 98, 255));
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				button.setBackground(new Color(50, 50, 50));
-			}
-		});
 	}
 }
