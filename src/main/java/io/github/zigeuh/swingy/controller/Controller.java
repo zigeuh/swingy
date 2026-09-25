@@ -5,8 +5,12 @@ import io.github.zigeuh.swingy.model.artifact.Artifact;
 import io.github.zigeuh.swingy.model.hero.Hero;
 import io.github.zigeuh.swingy.model.hero.HeroClass;
 import io.github.zigeuh.swingy.view.IView;
+import jakarta.validation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public class Controller {
 
@@ -15,8 +19,11 @@ public class Controller {
 	private BattleResult pendingResult;
 	private SaveSlot[] slots;
 	private final SaveManager saveManager;
+	private final Validator validator;
 
 	public Controller() {
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		this.validator = factory.getValidator();
 		this.saveManager = new SaveManager();
 	}
 
@@ -49,7 +56,7 @@ public class Controller {
 			startGame(new Hero(slot.getHero()));
 		}
 		else {
-			view.showCreateHero();
+			view.showCreateHero(null);
 		}
 	}
 
@@ -87,7 +94,20 @@ public class Controller {
 		HeroClass heroClass = HeroClass.valueOf(formattedName);
 		Hero hero = new Hero(name, heroClass);
 
-		startGame(hero);
+		Set<ConstraintViolation<Hero>> violationSet = validator.validate(hero);
+
+		if (violationSet.isEmpty()) {
+			startGame(hero);
+			return;
+		}
+
+		List<String> errors = new ArrayList<>();
+
+		for (ConstraintViolation<Hero> violation: violationSet) {
+			errors.add(violation.getMessage());
+		}
+
+		view.showCreateHero(errors);
 	}
 
 	public void cancelCreation() {

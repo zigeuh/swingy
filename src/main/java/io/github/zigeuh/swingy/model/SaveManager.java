@@ -18,15 +18,15 @@ public class SaveManager {
 		try {
 			initDatabase();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			throw new IllegalStateException("Cannot initialize save database: " + DB_DIR, e);
 		}
 	}
 
 	public void save(int slot, Hero hero) {
-		try (Connection conn = DriverManager.getConnection(DB_URL)) {
-			String request = "MERGE INTO SAVES (slot, name, hero_class, level, xp, current_hp, weapon, armor, helm, weapon_bonus, armor_bonus, helm_bonus)"
-					+ " KEY(slot) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			PreparedStatement stmt = conn.prepareStatement(request);
+		String request = "MERGE INTO SAVES (slot, name, hero_class, level, xp, current_hp, weapon, armor, helm, weapon_bonus, armor_bonus, helm_bonus)"
+				+ " KEY(slot) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		try (Connection conn = DriverManager.getConnection(DB_URL);
+				PreparedStatement stmt = conn.prepareStatement(request)) {
 
 			stmt.setInt(1, slot);
 			stmt.setString(2, hero.getName());
@@ -52,9 +52,9 @@ public class SaveManager {
 	}
 
 	public void delete(int slot) {
-		try (Connection conn = DriverManager.getConnection(DB_URL)) {
-			String request = "DELETE FROM SAVES WHERE slot = ?";
-			PreparedStatement stmt = conn.prepareStatement(request);
+		String request = "DELETE FROM SAVES WHERE slot = ?";
+		try (Connection conn = DriverManager.getConnection(DB_URL);
+				PreparedStatement stmt = conn.prepareStatement(request)) {
 
 			stmt.setInt(1, slot);
 
@@ -67,10 +67,9 @@ public class SaveManager {
 	public SaveSlot[] load() {
 		SaveSlot[] saveSlots = new SaveSlot[3];
 
-		try (Connection conn = DriverManager.getConnection(DB_URL)) {
-			Statement stmt = conn.createStatement();
-
-			ResultSet resultSet =  stmt.executeQuery("SELECT * from SAVES");
+		try (Connection conn = DriverManager.getConnection(DB_URL);
+				Statement stmt = conn.createStatement();
+				ResultSet resultSet = stmt.executeQuery("SELECT * from SAVES")) {
 
 			int i = 0;
 			while (resultSet.next() && i < 3) {
@@ -96,7 +95,7 @@ public class SaveManager {
 			}
 
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			throw new IllegalStateException("Cannot load saves from: " + DB_DIR, e);
 		}
 
 		for (int i = 0; i < 3; i++) {
@@ -129,8 +128,8 @@ public class SaveManager {
 				+ "helm_bonus INT"
 				+ ")";
 
-		try (Connection conn = DriverManager.getConnection(DB_URL)) {
-			Statement stmt = conn.createStatement();
+		try (Connection conn = DriverManager.getConnection(DB_URL);
+				Statement stmt = conn.createStatement()) {
 			stmt.execute(sqlSaves);
 		}
 	}

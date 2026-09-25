@@ -6,11 +6,13 @@ import io.github.zigeuh.swingy.model.SaveSlot;
 import io.github.zigeuh.swingy.model.artifact.Artifact;
 import io.github.zigeuh.swingy.model.enemy.Enemy;
 
+import java.util.List;
+
 public interface IView {
 
 	void showMenu(SaveSlot[] slots);
 
-	void showCreateHero();
+	void showCreateHero(List<String> errors);
 
 	void showPause();
 

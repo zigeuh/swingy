@@ -8,6 +8,8 @@ import java.awt.*;
 
 public class CreateHeroPanel extends JPanel {
 	private final Controller controller;
+	private final JTextField nameInput = new JTextField();
+	private final JLabel nameError = new JLabel("", SwingConstants.CENTER);
 
 	public CreateHeroPanel(Controller controller) {
 		this.controller = controller;
@@ -16,7 +18,6 @@ public class CreateHeroPanel extends JPanel {
 		JLabel title = new JLabel("Create your character");
 
 		JLabel name = new JLabel("Name :");
-		JTextField nameInput = new JTextField();
 
 		JLabel heroClass = new JLabel("Class :");
 		JComboBox<String> heroClassInput = new JComboBox<>();
@@ -28,9 +29,11 @@ public class CreateHeroPanel extends JPanel {
 				nameInput.getText(),
 				(String) heroClassInput.getSelectedItem()
 		));
-		JButton cancel = CustomComponent.createButton("Create", controller::cancelCreation);
+		JButton cancel = CustomComponent.createButton("Cancel", controller::cancelCreation);
 
 		title.setHorizontalAlignment(SwingConstants.CENTER);
+		nameError.setHorizontalAlignment(SwingConstants.CENTER);
+		nameError.setFont(new Font("Arial", Font.ITALIC, 14));
 		name.setHorizontalAlignment(SwingConstants.RIGHT);
 		nameInput.setHorizontalAlignment(SwingConstants.CENTER);
 		heroClass.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -92,12 +95,28 @@ public class CreateHeroPanel extends JPanel {
 		c.gridy = 3;
 		c.gridwidth = 2;
 		c.fill = GridBagConstraints.VERTICAL;
+		c.ipady = 0;
+		c.insets = new Insets(10, 0, 0, 0);
+		add(nameError, c);
+
+		c.gridy = 4;
 		c.ipady = 10;
 		c.insets = new Insets(20, 0, 0, 0);
 		add(create, c);
 
-		c.gridy = 4;
+		c.gridy = 5;
 		c.insets = new Insets(0, 0, 0, 0);
 		add(cancel, c);
+	}
+
+	public void setErrors(java.util.List<String> errors) {
+		if (errors == null || errors.isEmpty()) {
+			nameError.setText("");
+			nameInput.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
+		} else {
+			nameError.setText("<html><center>" + String.join("<br>", errors) + "</center></html>");
+			nameError.setForeground(new Color(255, 120, 120));
+			nameInput.setBorder(BorderFactory.createLineBorder(new Color(255, 120, 120), 2));
+		}
 	}
 }

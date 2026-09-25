@@ -3,11 +3,18 @@ package io.github.zigeuh.swingy.model.hero;
 import io.github.zigeuh.swingy.model.XpTable;
 import io.github.zigeuh.swingy.model.artifact.Artifact;
 import io.github.zigeuh.swingy.model.artifact.ArtifactType;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public class Hero {
 
+	@NotNull(message = "Hero's name can't be null")
+	@Size(min = 3, max = 12, message = "The length of the hero's name must be between 3 and 12 characters")
 	private final String name;
+
+	@NotNull(message = "Hero's class can't be null")
 	private final HeroClass heroClass;
+
 	private int hp;
 	private int level = 0;
 	private int xp = 0;
@@ -20,7 +27,7 @@ public class Hero {
 	}
 
 	public Hero(String name, HeroClass heroClass, int level, int xp, int currentHp, Artifact weapon, Artifact armor, Artifact helm) {
-		this.name = name;
+		this.name = name.trim();
 		this.heroClass = heroClass;
 		if (level < 0) throw new IllegalArgumentException("level < 0");
 		if (xp < 0) throw new IllegalArgumentException("xp < 0");

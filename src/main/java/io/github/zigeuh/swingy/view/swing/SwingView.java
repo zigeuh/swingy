@@ -12,6 +12,8 @@ import io.github.zigeuh.swingy.view.swing.panel.*;
 import javax.swing.*;
 import java.awt.*;
 
+import java.util.List;
+
 public class SwingView extends JFrame implements IView {
 
 	private final Controller controller;
@@ -69,7 +71,8 @@ public class SwingView extends JFrame implements IView {
 	}
 
 	@Override
-	public void showCreateHero() {
+	public void showCreateHero(List<String> errors) {
+		createHeroPanel.setErrors(errors);
 		cardLayout.show(getContentPane(), "create");
 	}
 
