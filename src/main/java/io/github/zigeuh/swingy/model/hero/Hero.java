@@ -27,7 +27,7 @@ public class Hero {
 	}
 
 	public Hero(String name, HeroClass heroClass, int level, int xp, int currentHp, Artifact weapon, Artifact armor, Artifact helm) {
-		this.name = name.trim();
+		this.name = name == null ? null : name.trim();
 		this.heroClass = heroClass;
 		if (level < 0) throw new IllegalArgumentException("level < 0");
 		if (xp < 0) throw new IllegalArgumentException("xp < 0");
@@ -55,18 +55,13 @@ public class Hero {
 			throw new IllegalArgumentException("XP gain can't be negative");
 		}
 
-		if (level >= 20) {
-			return;
-		}
-
 		this.xp += xp;
 
 		int requiredXp;
 
 		while ((requiredXp = getRequiredXp()) <= this.xp) {
 			this.level++;
-			if (level >= 20) this.xp = 0;
-			else this.xp -= requiredXp;
+			this.xp -= requiredXp;
 			this.hp = getMaxHp();
 		}
 	}

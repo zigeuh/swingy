@@ -32,10 +32,7 @@ public class StatsPanel extends JPanel {
 	private final JLabel helmName = new JLabel("", SwingConstants.LEFT);
 	private final JLabel helmBonus = new JLabel("", SwingConstants.RIGHT);
 
-	private final Map map;
-
-	public StatsPanel(Map map) {
-		this.map = map;
+	public StatsPanel() {
 
 		setBackground(Color.BLACK);
 		setLayout(new BorderLayout());
@@ -110,7 +107,7 @@ public class StatsPanel extends JPanel {
 		add(center, BorderLayout.CENTER);
 	}
 
-	public void setHero(Hero hero) {
+	public void setHero(Hero hero, Map map) {
 		var url = StatsPanel.class.getResource(hero.getHeroClass().getSpriteFolder() + "/portrait.png");
 		setSpriteIcon(new ImageIcon(url));
 

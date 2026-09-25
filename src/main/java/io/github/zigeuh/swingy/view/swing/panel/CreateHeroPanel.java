@@ -109,8 +109,11 @@ public class CreateHeroPanel extends JPanel {
 		add(cancel, c);
 	}
 
-	public void setErrors(java.util.List<String> errors) {
-		if (errors == null || errors.isEmpty()) {
+	public void setName(String name) {
+		if (name != null) nameInput.setText(name);
+	}
+
+	public void setErrors(java.util.List<String> errors) {		if (errors == null || errors.isEmpty()) {
 			nameError.setText("");
 			nameInput.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
 		} else {

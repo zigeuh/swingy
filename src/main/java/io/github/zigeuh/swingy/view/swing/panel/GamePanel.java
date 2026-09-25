@@ -29,8 +29,8 @@ public class GamePanel extends JPanel {
 		setBackground(Color.BLACK);
 
 		mapCanvas = new MapCanvas();
-		statsPanel = new StatsPanel(game.getMap());
-		statsPanel.setHero(game.getHero());
+		statsPanel = new StatsPanel();
+		statsPanel.setHero(game.getHero(), game.getMap());
 
 		add(mapCanvas, BorderLayout.CENTER);
 		add(statsPanel, BorderLayout.EAST);
@@ -61,7 +61,7 @@ public class GamePanel extends JPanel {
 	}
 
 	public void refresh() {
-		statsPanel.setHero(game.getHero());
+		statsPanel.setHero(game.getHero(), game.getMap());
 		mapCanvas.repaint();
 	}
 

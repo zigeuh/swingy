@@ -12,7 +12,7 @@ public interface IView {
 
 	void showMenu(SaveSlot[] slots);
 
-	void showCreateHero(List<String> errors);
+	void showCreateHero(String name, List<String> errors);
 
 	void showPause();
 

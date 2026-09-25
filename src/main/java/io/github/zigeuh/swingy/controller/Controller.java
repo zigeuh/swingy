@@ -18,10 +18,11 @@ public class Controller {
 	private BattleResult pendingResult;
 	private SaveSlot[] slots;
 	private final SaveManager saveManager;
+	private final ValidatorFactory factory;
 	private final Validator validator;
 
 	public Controller() {
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+		this.factory = Validation.buildDefaultValidatorFactory();
 		this.validator = factory.getValidator();
 		this.saveManager = new SaveManager();
 	}
@@ -55,7 +56,7 @@ public class Controller {
 			startGame(new Hero(slot.getHero()));
 		}
 		else {
-			view.showCreateHero(null);
+			view.showCreateHero(null, null);
 		}
 	}
 
@@ -110,7 +111,7 @@ public class Controller {
 			errors.add(violation.getMessage());
 		}
 
-		view.showCreateHero(errors);
+		view.showCreateHero(name, errors);
 	}
 
 	public void cancelCreation() {
@@ -131,6 +132,7 @@ public class Controller {
 	}
 
 	public void quit() {
+		factory.close();
 		System.exit(0);
 	}
 

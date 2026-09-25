@@ -128,8 +128,12 @@ public class BattleRecapPanel extends JPanel {
 
 	private static String format(RoundLog round) {
 		return "<html><font color='#3caec8'><b>Round " + round.round() + "</b></font> - <b>"
-				+ round.attacker() + "</b> deals <font color='#ffb14e'><b>" + round.damage()
+				+ escape(round.attacker()) + "</b> deals <font color='#ffb14e'><b>" + round.damage()
 				+ " dmg</b></font> <font color='gray'>(hero: " + round.heroHpLeft()
 				+ ", enemy: " + round.enemyHpLeft() + ")</font></html>";
+	}
+
+	private static String escape(String text) {
+		return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
 	}
 }

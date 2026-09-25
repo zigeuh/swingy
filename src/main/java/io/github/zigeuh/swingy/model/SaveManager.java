@@ -71,28 +71,28 @@ public class SaveManager {
 				Statement stmt = conn.createStatement();
 				ResultSet resultSet = stmt.executeQuery("SELECT * from SAVES")) {
 
-			int i = 0;
-			while (resultSet.next() && i < 3) {
+		int i = 0;
+		while (resultSet.next() && i < 3) {
+			try {
 				int slot = resultSet.getInt("slot");
 				String name = resultSet.getString("name");
-				HeroClass heroClass = HeroClass.valueOf(resultSet.getString("hero_class"));
+				String className = resultSet.getString("hero_class");
+				if (slot < 0 || slot >= 3 || name == null || className == null) continue;
+				HeroClass heroClass = HeroClass.valueOf(className);
+
 				int level = resultSet.getInt("level");
 				int xp = resultSet.getInt("xp");
 				int currentHp = resultSet.getInt("current_hp");
 
-				String weaponName = resultSet.getString("weapon");
-				Artifact weapon = weaponName.isEmpty() ? null : new Artifact(ArtifactTemplate.valueOf(weaponName), resultSet.getInt("weapon_bonus"));
-
-				String armorName = resultSet.getString("armor");
-				Artifact armor = armorName.isEmpty() ? null : new Artifact(ArtifactTemplate.valueOf(armorName), resultSet.getInt("armor_bonus"));
-
-				String helmName = resultSet.getString("helm");
-				Artifact helm = helmName.isEmpty() ? null : new Artifact(ArtifactTemplate.valueOf(helmName), resultSet.getInt("helm_bonus"));
+				Artifact weapon = loadArtifact(resultSet, "weapon", "weapon_bonus");
+				Artifact armor = loadArtifact(resultSet, "armor", "armor_bonus");
+				Artifact helm = loadArtifact(resultSet, "helm", "helm_bonus");
 
 				Hero hero = new Hero(name, heroClass, level, xp, currentHp, weapon, armor, helm);
 				saveSlots[slot] = new SaveSlot(slot, true, hero);
 				i++;
-			}
+			} catch (IllegalArgumentException ignored) {}
+		}
 
 		} catch (SQLException e) {
 			throw new IllegalStateException("Cannot load saves from: " + DB_DIR, e);
@@ -105,6 +105,12 @@ public class SaveManager {
 		}
 
 		return saveSlots;
+	}
+
+	private static Artifact loadArtifact(ResultSet resultSet, String nameColumn, String bonusColumn) throws SQLException {
+		String templateName = resultSet.getString(nameColumn);
+		if (templateName == null || templateName.isEmpty()) return null;
+		return new Artifact(ArtifactTemplate.valueOf(templateName), resultSet.getInt(bonusColumn));
 	}
 
 	private void initDatabase() throws SQLException {

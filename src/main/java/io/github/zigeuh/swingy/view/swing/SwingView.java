@@ -71,7 +71,8 @@ public class SwingView extends JFrame implements IView {
 	}
 
 	@Override
-	public void showCreateHero(List<String> errors) {
+	public void showCreateHero(String name, List<String> errors) {
+		createHeroPanel.setName(name);
 		createHeroPanel.setErrors(errors);
 		cardLayout.show(getContentPane(), "create");
 	}
