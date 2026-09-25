@@ -39,7 +39,9 @@ public class Map {
 	}
 
 	public Enemy[][] getGrid() {
-		return grid;
+		Enemy[][] copy = new Enemy[grid.length][];
+		for (int i = 0; i < grid.length; i++) copy[i] = grid[i].clone();
+		return copy;
 	}
 
 	public Enemy getEnemyAt(Coordinates c) {

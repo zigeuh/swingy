@@ -9,7 +9,6 @@ import jakarta.validation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 public class Controller {
@@ -89,9 +88,13 @@ public class Controller {
 	}
 
 	public void createCharacter(String name, String heroClassName) {
-		String formattedName = heroClassName.replace(" ", "_").toUpperCase();
 
-		HeroClass heroClass = HeroClass.valueOf(formattedName);
+		HeroClass heroClass = null;
+		if (heroClassName != null) {
+			String formattedName = heroClassName.replace(" ", "_").toUpperCase();
+			heroClass = HeroClass.valueOf(formattedName);
+		}
+
 		Hero hero = new Hero(name, heroClass);
 
 		Set<ConstraintViolation<Hero>> violationSet = validator.validate(hero);
@@ -134,8 +137,7 @@ public class Controller {
 	public void move(Direction direction) {
 		MoveResult result = game.move(direction);
 		if (result.win()) {
-			game.generateNewMap();
-			game.healHero();
+			game.win();
 			view.showWin();
 		}
 		else if (result.enemy() != null) view.showStartBattle(result.enemy());
@@ -164,9 +166,8 @@ public class Controller {
 	}
 
 	public void escape() {
-		Random rand = new Random();
-		if (rand.nextDouble() < 0.5) fight();
-		else resume();
+		if (game.tryEscape()) resume();
+		else fight();
 	}
 
 	private void startGame(Hero hero) {

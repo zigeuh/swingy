@@ -119,15 +119,17 @@ public class BattleRecapPanel extends JPanel {
 		skipButton.setVisible(!done);
 		continueButton.setVisible(done);
 		if (done && current != null) {
-			summary.setText("<html><center>XP gained : " + current.xpGained()
-					+ "<br>Hero HP left : " + current.heroHpLeft() + "</center></html>");
+			summary.setText("<html><center>XP gained : <font color='#78ff78'>"
+					+ current.xpGained() + "</font>"
+					+ "<br>Hero HP left : <font color='#78ff78'>" + current.heroHpLeft()
+					+ "</font></center></html>");
 		}
 	}
 
 	private static String format(RoundLog round) {
-		return "Round " + round.round() + " - " + round.attacker()
-				+ " deals " + round.damage() + " dmg"
-				+ " (hero: " + round.heroHpLeft()
-				+ ", enemy: " + round.enemyHpLeft() + ")";
+		return "<html><font color='#3caec8'><b>Round " + round.round() + "</b></font> - <b>"
+				+ round.attacker() + "</b> deals <font color='#ffb14e'><b>" + round.damage()
+				+ " dmg</b></font> <font color='gray'>(hero: " + round.heroHpLeft()
+				+ ", enemy: " + round.enemyHpLeft() + ")</font></html>";
 	}
 }

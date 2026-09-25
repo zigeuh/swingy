@@ -12,7 +12,7 @@ public class Hero {
 	@Size(min = 3, max = 12, message = "The length of the hero's name must be between 3 and 12 characters")
 	private final String name;
 
-	@NotNull(message = "Hero's class can't be null")
+	@NotNull(message = "Invalid class")
 	private final HeroClass heroClass;
 
 	private int hp;
@@ -23,7 +23,7 @@ public class Hero {
 	private Artifact helm;
 
 	public Hero(String name, HeroClass heroClass) {
-		this(name, heroClass, 0, 0, heroClass.getBaseHp(), null, null, null);
+		this(name, heroClass, 0, 0, heroClass == null ? 0 : heroClass.getBaseHp(), null, null, null);
 	}
 
 	public Hero(String name, HeroClass heroClass, int level, int xp, int currentHp, Artifact weapon, Artifact armor, Artifact helm) {
@@ -134,7 +134,7 @@ public class Hero {
 	}
 
 	public int getMaxHp() {
-		return heroClass.getBaseHp() + Math.floorDiv(Math.max(0, level), 2) * 5 + (helm != null ? helm.bonus() : 0);
+		return heroClass == null ? 0 : heroClass.getBaseHp() + Math.floorDiv(Math.max(0, level), 2) * 5 + (helm != null ? helm.bonus() : 0);
 	}
 
 	public int getAttack() {
