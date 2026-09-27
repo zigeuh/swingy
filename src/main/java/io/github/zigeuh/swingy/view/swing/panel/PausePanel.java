@@ -17,6 +17,7 @@ public class PausePanel extends JPanel {
 
 		JButton resume = CustomComponent.createButton("Resume", controller::resume);
 		JButton save = CustomComponent.createButton("Save", controller::saveGame);
+		JButton switchView = CustomComponent.createButton("Switch view", controller::switchView);
 		JButton backToMenu = CustomComponent.createButton("Return to main-menu", controller::backToMenu);
 
 		title.setHorizontalAlignment(SwingConstants.CENTER);
@@ -43,6 +44,9 @@ public class PausePanel extends JPanel {
 		add(save, c);
 
 		c.gridy = 3;
+		add(switchView, c);
+
+		c.gridy = 4;
 		add(backToMenu, c);
 	}
 }

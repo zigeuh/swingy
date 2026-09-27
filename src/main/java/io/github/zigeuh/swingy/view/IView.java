@@ -35,4 +35,6 @@ public interface IView {
 	void refreshGame();
 
 	void showSaveFailed(String message);
+
+	void closeView();
 }

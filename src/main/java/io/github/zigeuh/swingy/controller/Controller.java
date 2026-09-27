@@ -5,6 +5,9 @@ import io.github.zigeuh.swingy.model.artifact.Artifact;
 import io.github.zigeuh.swingy.model.hero.Hero;
 import io.github.zigeuh.swingy.model.hero.HeroClass;
 import io.github.zigeuh.swingy.view.IView;
+import io.github.zigeuh.swingy.view.ViewType;
+import io.github.zigeuh.swingy.view.console.ConsoleView;
+import io.github.zigeuh.swingy.view.swing.SwingView;
 import jakarta.validation.*;
 
 import java.util.ArrayList;
@@ -14,6 +17,7 @@ import java.util.Set;
 public class Controller {
 
 	private IView view;
+	private ViewType currentView;
 	private Game game;
 	private BattleResult pendingResult;
 	private SaveSlot[] slots;
@@ -279,7 +283,18 @@ public class Controller {
 		view.showGame(game);
 	}
 
-	public void setView(IView view) {
-		this.view = view;
+	public void setView(ViewType viewType) {
+		currentView = viewType;
+		if (viewType == ViewType.CONSOLE) view = new ConsoleView(this);
+		else view = new SwingView(this);
+	}
+
+	public void switchView() {
+		view.closeView();
+
+		if (currentView == ViewType.CONSOLE) setView(ViewType.GUI);
+		else setView(ViewType.CONSOLE);
+
+		view.showGame(game);
 	}
 }

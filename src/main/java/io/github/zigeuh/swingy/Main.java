@@ -1,6 +1,7 @@
 package io.github.zigeuh.swingy;
 
 import io.github.zigeuh.swingy.controller.Controller;
+import io.github.zigeuh.swingy.view.ViewType;
 import io.github.zigeuh.swingy.view.console.ConsoleView;
 import io.github.zigeuh.swingy.view.swing.SwingView;
 
@@ -13,12 +14,12 @@ public class Main {
         switch (mode) {
             case "console" -> {
                 Controller controller = new Controller();
-                controller.setView(new ConsoleView(controller));
+                controller.setView(ViewType.CONSOLE);
                 controller.start();
             }
             case "gui" -> SwingUtilities.invokeLater(() -> {
                 Controller controller = new Controller();
-                controller.setView(new SwingView(controller));
+                controller.setView(ViewType.GUI);
                 controller.start();
             });
             default -> {

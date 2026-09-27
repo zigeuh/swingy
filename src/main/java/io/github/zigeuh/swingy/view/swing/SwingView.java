@@ -158,4 +158,9 @@ public class SwingView extends JFrame implements IView {
 		saveFailedPanel.setMessage(message);
 		cardLayout.show(getContentPane(), "saveFailed");
 	}
+
+	@Override
+	public void closeView() {
+		this.dispose();
+	}
 }

@@ -174,7 +174,7 @@ public class ConsoleView implements IView {
 		while (true) {
 			clear();
 			header("PAUSE");
-			String choice = prompt("[r]esume  [s]ave  [m]enu").toLowerCase();
+			String choice = prompt("[r]esume  [s]ave  [c]hange view  [m]enu").toLowerCase();
 			switch (choice) {
 				case "r" -> {
 					controller.resume();
@@ -182,6 +182,10 @@ public class ConsoleView implements IView {
 				}
 				case "s" -> {
 					controller.saveGame();
+					return;
+				}
+				case "c" -> {
+					controller.switchView();
 					return;
 				}
 				case "m" -> {
@@ -243,6 +247,11 @@ public class ConsoleView implements IView {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void closeView() {
+		clear();
 	}
 
 	@Override
