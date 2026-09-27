@@ -137,6 +137,17 @@ public class SaveManager {
 		try (Connection conn = DriverManager.getConnection(DB_URL);
 				Statement stmt = conn.createStatement()) {
 			stmt.execute(sqlSaves);
+			stmt.execute("ALTER TABLE saves ADD COLUMN IF NOT EXISTS name VARCHAR(50)");
+			stmt.execute("ALTER TABLE saves ADD COLUMN IF NOT EXISTS hero_class VARCHAR(30)");
+			stmt.execute("ALTER TABLE saves ADD COLUMN IF NOT EXISTS level INT");
+			stmt.execute("ALTER TABLE saves ADD COLUMN IF NOT EXISTS xp INT");
+			stmt.execute("ALTER TABLE saves ADD COLUMN IF NOT EXISTS current_hp INT");
+			stmt.execute("ALTER TABLE saves ADD COLUMN IF NOT EXISTS weapon VARCHAR(30)");
+			stmt.execute("ALTER TABLE saves ADD COLUMN IF NOT EXISTS armor VARCHAR(30)");
+			stmt.execute("ALTER TABLE saves ADD COLUMN IF NOT EXISTS helm VARCHAR(30)");
+			stmt.execute("ALTER TABLE saves ADD COLUMN IF NOT EXISTS weapon_bonus INT");
+			stmt.execute("ALTER TABLE saves ADD COLUMN IF NOT EXISTS armor_bonus INT");
+			stmt.execute("ALTER TABLE saves ADD COLUMN IF NOT EXISTS helm_bonus INT");
 		}
 	}
 }

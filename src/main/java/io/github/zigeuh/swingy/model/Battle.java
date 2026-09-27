@@ -12,9 +12,10 @@ public class Battle {
 
 	private Battle() {}
 
+	private static final Random RANDOM = new Random();
+
 	private static int damage(int attackerAttack, int targetDefense) {
-		Random random = new Random();
-		int luck = random.nextInt(-2, 3);
+		int luck = RANDOM.nextInt(-2, 3);
 		return Math.max(1, attackerAttack + luck - targetDefense);
 	}
 

@@ -71,6 +71,7 @@ public class Hero {
 	}
 
 	public void equip(Artifact artifact) {
+		if (artifact == null) throw new IllegalArgumentException("artifact is null");
 		switch (artifact.getType()) {
 			case WEAPON -> weapon = artifact;
 			case ARMOR -> armor = artifact;
@@ -94,6 +95,7 @@ public class Hero {
 	}
 
 	public Artifact getArtifactOf(ArtifactType type) {
+		if (type == null) return null;
 		switch (type) {
 			case HELM -> {
 				return helm;
@@ -133,10 +135,12 @@ public class Hero {
 	}
 
 	public int getAttack() {
+		if (heroClass == null) return weapon != null ? weapon.bonus() : 0;
 		return heroClass.getBaseAttack() + Math.floorDiv(Math.max(0, level), 3) * 3 + (weapon != null ? weapon.bonus() : 0);
 	}
 
 	public int getDefense() {
+		if (heroClass == null) return armor != null ? armor.bonus() : 0;
 		return heroClass.getBaseDefense() + Math.floorDiv(Math.max(0, level), 3) * 2 + (armor != null ? armor.bonus() : 0);
 	}
 

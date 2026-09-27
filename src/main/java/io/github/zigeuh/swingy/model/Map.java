@@ -7,6 +7,8 @@ import java.util.Random;
 
 public class Map {
 
+	private static final Random RANDOM = new Random();
+
 	private final Enemy[][] grid;
 	private Coordinates heroPos;
 
@@ -22,7 +24,6 @@ public class Map {
 		int size = (level - 1) * 5 + 10 - (level % 2);
 		Enemy[][] newMap = new Enemy[size][size];
 
-		Random rand = new Random();
 		double enemyChance = 0.05;
 
 		int mid = Math.floorDiv(size, 2);
@@ -31,7 +32,7 @@ public class Map {
 				if (x == mid && y == mid)
 					newMap[y][x] = null;
 				else
-					newMap[y][x] = rand.nextDouble() < enemyChance ? EnemyFactory.createEnemy(level) : null;
+					newMap[y][x] = RANDOM.nextDouble() < enemyChance ? EnemyFactory.createEnemy(level) : null;
 			}
 		}
 

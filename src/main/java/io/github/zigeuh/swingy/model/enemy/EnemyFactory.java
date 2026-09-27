@@ -5,11 +5,12 @@ import java.util.Random;
 public class EnemyFactory {
 	private EnemyFactory() {}
 
-	public static Enemy createEnemy(int heroLevel) {
-		Random random = new Random();
-		int level = Math.max(1, heroLevel + random.nextInt(-1, 2));
+	private static final Random RANDOM = new Random();
 
-		return switch (random.nextInt(3)) {
+	public static Enemy createEnemy(int heroLevel) {
+		int level = Math.max(1, heroLevel + RANDOM.nextInt(-1, 2));
+
+		return switch (RANDOM.nextInt(3)) {
 			case 0 -> EnemyType.SHADOW.forLevel(level);
 			case 1 -> EnemyType.RED_NOCTURNE.forLevel(level);
 			default -> EnemyType.LARGE_BODY.forLevel(level);

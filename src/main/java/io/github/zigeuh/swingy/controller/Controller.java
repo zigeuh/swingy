@@ -188,10 +188,18 @@ public class Controller {
 	}
 
 	public void pause() {
+		if (game == null) {
+			view.showMenu(slots);
+			return;
+		}
 		view.showPause();
 	}
 
 	public void resume() {
+		if (game == null) {
+			view.showMenu(slots);
+			return;
+		}
 		view.showGame(game);
 	}
 
@@ -220,6 +228,10 @@ public class Controller {
 	}
 
 	public void move(Direction direction) {
+		if (game == null) {
+			view.showMenu(slots);
+			return;
+		}
 		MoveResult result = game.move(direction);
 		if (result.win()) {
 			game.win();
@@ -230,12 +242,30 @@ public class Controller {
 	}
 
 	public void fight() {
+		if (game == null) {
+			view.showMenu(slots);
+			return;
+		}
+		if (game.getMap().getEnemyAt(game.getMap().getHeroPos()) == null) {
+			view.showGame(game);
+			return;
+		}
 		this.pendingResult = game.fight();
 		view.showBattleResult(this.pendingResult);
 	}
 
 	public void afterBattle() {
+		if (pendingResult == null) {
+			if (game != null) view.showGame(game);
+			else view.showMenu(slots);
+			return;
+		}
 		if (pendingResult != null && pendingResult.victory()) {
+			if (game == null) {
+				pendingResult = null;
+				view.showMenu(slots);
+				return;
+			}
 			Artifact loot = pendingResult.loot();
 
 			if (loot != null) view.showLoot(game.getHero().getArtifactOf(loot.getType()), loot);
@@ -246,13 +276,18 @@ public class Controller {
 		} else {
 			pendingResult = null;
 
-			if (saveManager != null) {
+			if (game == null) {
+				view.showMenu(slots);
+				return;
+			}
+
+			if (saveManager != null && currentSlotId >= 0 && currentSlotId < 3) {
 				try {
 					saveManager.delete(currentSlotId);
 				} catch (Exception ignored) {
 				}
 			}
-			slots[currentSlotId] = new SaveSlot(currentSlotId, false, null);
+			if (currentSlotId >= 0 && currentSlotId < 3) slots[currentSlotId] = new SaveSlot(currentSlotId, false, null);
 			currentSlotId = -1;
 
 			Hero hero = game.getHero();
@@ -263,6 +298,10 @@ public class Controller {
 	}
 
 	public void escape() {
+		if (game == null) {
+			view.showMenu(slots);
+			return;
+		}
 		if (game.tryEscape()) resume();
 		else fight();
 	}
@@ -273,6 +312,12 @@ public class Controller {
 	}
 
 	public void keepLoot() {
+		if (game == null || pendingResult == null || pendingResult.loot() == null) {
+			pendingResult = null;
+			if (game != null) view.showGame(game);
+			else view.showMenu(slots);
+			return;
+		}
 		game.getHero().equip(pendingResult.loot());
 		pendingResult = null;
 		view.showGame(game);
@@ -280,7 +325,8 @@ public class Controller {
 
 	public void dropLoot() {
 		pendingResult = null;
-		view.showGame(game);
+		if (game != null) view.showGame(game);
+		else view.showMenu(slots);
 	}
 
 	public void setView(ViewType viewType) {
@@ -290,11 +336,13 @@ public class Controller {
 	}
 
 	public void switchView() {
+		if (view == null) return;
 		view.closeView();
 
 		if (currentView == ViewType.CONSOLE) setView(ViewType.GUI);
 		else setView(ViewType.CONSOLE);
 
-		view.showGame(game);
+		if (game != null) view.showGame(game);
+		else view.showMenu(slots);
 	}
 }

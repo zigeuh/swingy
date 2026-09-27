@@ -24,6 +24,7 @@ public class Game {
 	}
 
 	public void generateNewMap() {
+		previous = null;
 		map = new Map(hero.getLevel());
 	}
 
@@ -33,6 +34,7 @@ public class Game {
 	}
 
 	public boolean tryEscape() {
+		if (previous == null) return false;
 		double rand =  random.nextDouble();
 
 		if (rand >= 0.5) {
@@ -74,7 +76,9 @@ public class Game {
 	}
 
 	public BattleResult fight() {
-		BattleResult result = Battle.simulate(hero, map.getEnemyAt(map.getHeroPos()));
+		Enemy enemy = map.getEnemyAt(map.getHeroPos());
+		if (enemy == null) throw new IllegalStateException("No enemy on current position");
+		BattleResult result = Battle.simulate(hero, enemy);
 		hero.setCurrentHp(result.heroHpLeft());
 		if (result.victory()) {
 			map.removeEnemyAt(map.getHeroPos());
