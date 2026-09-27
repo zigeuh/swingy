@@ -51,6 +51,7 @@ public class GamePanel extends JPanel {
 		actionMap.put("pause", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if (!isShowing()) return;
 				controller.pause();
 			}
 		});
@@ -69,6 +70,7 @@ public class GamePanel extends JPanel {
 		return new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if (!isShowing()) return;
 				controller.move(direction);
 			}
 		};

@@ -33,7 +33,8 @@ public class ConsoleView implements IView {
 	private static final int WIDTH = 46;
 
 	private final Controller controller;
-	private final Scanner in = new Scanner(System.in);
+	private static final Scanner IN = new Scanner(System.in);
+	private volatile boolean closed;
 	private Game currentGame;
 	private boolean inGame;
 	private boolean creating;
@@ -54,7 +55,7 @@ public class ConsoleView implements IView {
 
 	@Override
 	public void showMenu(SaveSlot[] slots) {
-		while (true) {
+		while (!closed) {
 			clear();
 			header("KINGDOM HEARTS: TESSELLATED HEARTS (Swingy)");
 			if (!controller.isPersistenceAvailable()) {
@@ -103,7 +104,7 @@ public class ConsoleView implements IView {
 		try {
 			String hint = nameHint;
 			List<String> errs = errors;
-			while (true) {
+			while (!closed) {
 				try {
 					createOnce(hint, errs);
 					return;
@@ -171,7 +172,7 @@ public class ConsoleView implements IView {
 
 	@Override
 	public void showPause() {
-		while (true) {
+		while (!closed) {
 			clear();
 			header("PAUSE");
 			String choice = prompt("[r]esume  [s]ave  [c]hange view  [m]enu").toLowerCase();
@@ -199,11 +200,12 @@ public class ConsoleView implements IView {
 
 	@Override
 	public void showGame(Game game) {
+		if (closed) return;
 		this.currentGame = game;
 		if (inGame) throw new Redraw();
 		inGame = true;
 		try {
-			while (true) {
+			while (!closed) {
 				try {
 					gameLoop(game);
 					return;
@@ -218,12 +220,13 @@ public class ConsoleView implements IView {
 
 	@Override
 	public void refreshGame() {
+		if (closed) return;
 		if (currentGame != null) throw new Redraw();
 	}
 
 	@Override
 	public void showSaveFailed(String message) {
-		while (true) {
+		while (!closed) {
 			clear();
 			header("GAME SAVED FAILED");
 			System.out.println("  " + RED + message + RESET);
@@ -251,12 +254,13 @@ public class ConsoleView implements IView {
 
 	@Override
 	public void closeView() {
+		closed = true;
 		clear();
 	}
 
 	@Override
 	public void showStartBattle(Enemy enemy) {
-		while (true) {
+		while (!closed) {
 			clear();
 			header(RED + "An enemy is approaching..." + RESET);
 			if (enemy != null) {
@@ -299,7 +303,7 @@ public class ConsoleView implements IView {
 
 	@Override
 	public void showSaveConfirmation() {
-		while (true) {
+		while (!closed) {
 			clear();
 			header("GAME SAVED SUCCESSFULLY");
 
@@ -326,7 +330,7 @@ public class ConsoleView implements IView {
 
 	@Override
 	public void showDelete(SaveSlot[] slots) {
-		while (true) {
+		while (!closed) {
 			clear();
 			header("DELETE SAVE");
 			for (SaveSlot slot : slots) {
@@ -391,7 +395,7 @@ public class ConsoleView implements IView {
 		}
 		System.out.println();
 		String choice = prompt("[k]eep  [d]rop").toLowerCase();
-		while (true) {
+		while (!closed) {
 			switch (choice) {
 				case "k" -> {
 					controller.keepLoot();
@@ -410,7 +414,7 @@ public class ConsoleView implements IView {
 	}
 
 	private void gameLoop(Game game) {
-		while (true) {
+		while (!closed) {
 			clear();
 			printHero(game.getHero());
 			printMap(game);
@@ -526,7 +530,7 @@ public class ConsoleView implements IView {
 	private String prompt(String label) {
 		System.out.print("  " + YELLOW + label + " > " + RESET);
 		try {
-			return in.nextLine().trim();
+			return IN.nextLine().trim();
 		} catch (NoSuchElementException e) {
 			controller.quit();
 			throw new IllegalStateException("Unreachable: quit always exits", e);
@@ -536,7 +540,7 @@ public class ConsoleView implements IView {
 	private void pressEnter() {
 		System.out.print("  " + GRAY + "[Enter] continue" + RESET);
 		try {
-			in.nextLine();
+			IN.nextLine();
 		} catch (NoSuchElementException e) {
 			controller.quit();
 			throw new IllegalStateException("Unreachable: quit always exits", e);
