@@ -22,14 +22,17 @@ public interface IView {
 
 	void showBattleResult(BattleResult result);
 
-	void showSave(SaveSlot[] slots);
+	void showSaveConfirmation();
 
 	void showDelete(SaveSlot[] slots);
 
 	void showWin();
 
+	void showLose(String name, String heroClass, int level);
+
 	void showLoot(Artifact current, Artifact loot);
 
 	void refreshGame();
 
+	void showSaveFailed(String message);
 }

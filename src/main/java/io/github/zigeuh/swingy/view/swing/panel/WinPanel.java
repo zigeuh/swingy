@@ -16,7 +16,7 @@ public class WinPanel extends JPanel {
 		JLabel title = new JLabel("You win!");
 
 		JButton continuee = CustomComponent.createButton("Continue", controller::resume);
-		JButton save = CustomComponent.createButton("Save", controller::saveMenu);
+		JButton save = CustomComponent.createButton("Save", controller::saveGame);
 
 		title.setHorizontalAlignment(SwingConstants.CENTER);
 		title.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 30));

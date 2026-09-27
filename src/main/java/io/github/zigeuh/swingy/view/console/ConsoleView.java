@@ -57,6 +57,12 @@ public class ConsoleView implements IView {
 		while (true) {
 			clear();
 			header("KINGDOM HEARTS: TESSELLATED HEARTS (Swingy)");
+			if (!controller.isPersistenceAvailable()) {
+				System.out.println("  " + YELLOW + "Saving unavailable, session will not be persisted." + RESET);
+				if (controller.getPersistenceError() != null) {
+					System.out.println("  " + GRAY + controller.getPersistenceError() + RESET);
+				}
+			}
 			System.out.println("  Select your hero :");
 			System.out.println();
 			for (SaveSlot slot : slots) {
@@ -126,14 +132,14 @@ public class ConsoleView implements IView {
 		if (nameHint != null) {
 			String input = prompt("Name [" + nameHint + "]");
 			if (input.equals("c")) {
-				controller.cancelCreation();
+				controller.backToMenu();
 				return;
 			}
 			name = input.isEmpty() ? nameHint : input;
 		} else {
 			name = prompt("Name");
 			if (name.equals("c")) {
-				controller.cancelCreation();
+				controller.backToMenu();
 				return;
 			}
 		}
@@ -149,7 +155,7 @@ public class ConsoleView implements IView {
 		System.out.println("  [c]ancel");
 		String choice = prompt("Class").toLowerCase();
 		if (choice.equals("c")) {
-			controller.cancelCreation();
+			controller.backToMenu();
 			return;
 		}
 
@@ -175,7 +181,7 @@ public class ConsoleView implements IView {
 					return;
 				}
 				case "s" -> {
-					controller.saveMenu();
+					controller.saveGame();
 					return;
 				}
 				case "m" -> {
@@ -209,6 +215,34 @@ public class ConsoleView implements IView {
 	@Override
 	public void refreshGame() {
 		if (currentGame != null) throw new Redraw();
+	}
+
+	@Override
+	public void showSaveFailed(String message) {
+		while (true) {
+			clear();
+			header("GAME SAVED FAILED");
+			System.out.println("  " + RED + message + RESET);
+
+			System.out.println();
+			System.out.println("  " + GRAY + "[c]ontinue   [r]etry" + RESET);
+			String choice = prompt("Choice").toLowerCase();
+
+			switch (choice) {
+				case "c" -> {
+					controller.resume();
+					return;
+				}
+				case "r" -> {
+					controller.saveGame();
+					return;
+				}
+				default -> {
+					System.out.println("  " + RED + "Invalid choice." + RESET);
+					pressEnter();
+				}
+			}
+		}
 	}
 
 	@Override
@@ -255,28 +289,28 @@ public class ConsoleView implements IView {
 	}
 
 	@Override
-	public void showSave(SaveSlot[] slots) {
+	public void showSaveConfirmation() {
 		while (true) {
 			clear();
-			header("SAVE GAME");
-			for (SaveSlot slot : slots) {
-				System.out.println("  " + slotLine(slot));
-			}
+			header("GAME SAVED SUCCESSFULLY");
+
 			System.out.println();
-			System.out.println("  " + GRAY + "[1-3] save here   [c]ancel" + RESET);
+			System.out.println("  " + GRAY + "[r]esume   [m]enu" + RESET);
 			String choice = prompt("Choice").toLowerCase();
-			if (choice.equals("c")) {
-				controller.resume();
-				return;
-			}
-			try {
-				int index = Integer.parseInt(choice) - 1;
-				if (index < 0 || index >= slots.length) throw new NumberFormatException();
-				controller.saveSlot(index);
-				return;
-			} catch (NumberFormatException e) {
-				System.out.println("  " + RED + "Invalid slot." + RESET);
-				pressEnter();
+
+			switch (choice) {
+				case "r" -> {
+					controller.resume();
+					return;
+				}
+				case "m" -> {
+					controller.backToMenu();
+					return;
+				}
+				default -> {
+					System.out.println("  " + RED + "Invalid choice." + RESET);
+					pressEnter();
+				}
 			}
 		}
 	}
@@ -293,7 +327,7 @@ public class ConsoleView implements IView {
 			System.out.println("  " + GRAY + "[1-3] delete   [c]ancel" + RESET);
 			String choice = prompt("Choice").toLowerCase();
 			if (choice.equals("c")) {
-				controller.cancelCreation();
+				controller.backToMenu();
 				return;
 			}
 			try {
@@ -315,8 +349,18 @@ public class ConsoleView implements IView {
 		System.out.println("  The map is cleared. A new, bigger one awaits.");
 		System.out.println();
 		String choice = prompt("[Enter] continue  [s]ave").toLowerCase();
-		if (choice.equals("s")) controller.saveMenu();
+		if (choice.equals("s")) controller.saveGame();
 		else controller.resume();
+	}
+
+	@Override
+	public void showLose(String name, String heroClass, int level) {
+		clear();
+		header(RED + "YOU LOSE..." + RESET);
+		System.out.println("  " + heroClass + " " + name + " died at level " + level);
+		System.out.println();
+		pressEnter();
+		controller.backToMenu();
 	}
 
 	@Override

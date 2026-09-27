@@ -29,7 +29,7 @@ public class CreateHeroPanel extends JPanel {
 				nameInput.getText(),
 				(String) heroClassInput.getSelectedItem()
 		));
-		JButton cancel = CustomComponent.createButton("Cancel", controller::cancelCreation);
+		JButton cancel = CustomComponent.createButton("Cancel", controller::backToMenu);
 
 		title.setHorizontalAlignment(SwingConstants.CENTER);
 		nameError.setHorizontalAlignment(SwingConstants.CENTER);

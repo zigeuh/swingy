@@ -21,6 +21,7 @@ public class StatsPanel extends JPanel {
 	private final JProgressBar hpBar = new JProgressBar(0, 100);
 	private final JLabel spriteLabel = new JLabel("Sprite", SwingConstants.CENTER);
 	private final JLabel mapSize = new JLabel("", SwingConstants.RIGHT);
+	private final JLabel currentCoordinates = new JLabel("", SwingConstants.RIGHT);
 
 	private final JLabel weaponSprite = new JLabel("Sprite", SwingConstants.CENTER);
 	private final JLabel weaponName = new JLabel("", SwingConstants.LEFT);
@@ -90,6 +91,7 @@ public class StatsPanel extends JPanel {
 		center.add(statRow("Attack", attackValue));
 		center.add(statRow("Defense", defenseValue));
 		center.add(statRow("Map size", mapSize));
+		center.add(statRow("Coordinates", currentCoordinates));
 
 		center.add(Box.createVerticalStrut(10));
 		JLabel artifactsHeader = new JLabel("Artifacts", SwingConstants.CENTER);
@@ -123,6 +125,7 @@ public class StatsPanel extends JPanel {
 		hpBar.setMaximum(Math.max(1, hero.getMaxHp()));
 		hpBar.setValue(Math.clamp(hero.getHp(), 0, hero.getMaxHp()));
 		mapSize.setText(map.getGrid()[0].length + "x" + map.getGrid().length);
+		currentCoordinates.setText("x: " + map.getHeroPos().x() + " | y: " + map.getHeroPos().y());
 		setArtifactSlot(ArtifactType.WEAPON, hero.getWeapon(), weaponSprite, weaponName, weaponBonus);
 		setArtifactSlot(ArtifactType.ARMOR, hero.getArmor(), armorSprite, armorName, armorBonus);
 		setArtifactSlot(ArtifactType.HELM, hero.getHelm(), helmSprite, helmName, helmBonus);

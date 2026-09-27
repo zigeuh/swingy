@@ -11,6 +11,8 @@ import io.github.zigeuh.swingy.view.swing.panel.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import java.util.List;
 
@@ -25,8 +27,10 @@ public class SwingView extends JFrame implements IView {
 	private final StartBattlePanel startBattlePanel;
 	private final BattleRecapPanel battleRecapPanel;
 	private final WinPanel winPanel;
+	private final LosePanel losePanel;
 	private final LootPanel lootPanel;
-	private final SavePanel savePanel;
+	private final SaveConfirmationPanel saveConfirmationPanel;
+	private final SaveFailedPanel saveFailedPanel;
 	private final DeletePanel deletePanel;
 	private GamePanel gamePanel;
 
@@ -43,8 +47,10 @@ public class SwingView extends JFrame implements IView {
 		startBattlePanel = new StartBattlePanel(controller);
 		battleRecapPanel = new BattleRecapPanel(controller);
 		winPanel = new WinPanel(controller);
+		losePanel = new LosePanel(controller);
 		lootPanel = new LootPanel(controller);
-		savePanel = new SavePanel(controller);
+		saveConfirmationPanel = new SaveConfirmationPanel(controller);
+		saveFailedPanel = new SaveFailedPanel(controller);
 		deletePanel = new DeletePanel(controller);
 
 		add("menu", menuPanel);
@@ -53,13 +59,21 @@ public class SwingView extends JFrame implements IView {
 		add("startBattle", startBattlePanel);
 		add("battleRecap", battleRecapPanel);
 		add("win", winPanel);
+		add("lose", losePanel);
 		add("loot", lootPanel);
-		add("save", savePanel);
+		add("saveConfirmation", saveConfirmationPanel);
+		add("saveFailed", saveFailedPanel);
 		add("delete", deletePanel);
 
 		this.setSize(1050, 750);
 		this.setMinimumSize(new Dimension(1050, 750));
-		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				controller.quit();
+			}
+		});
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 	}
@@ -107,9 +121,8 @@ public class SwingView extends JFrame implements IView {
 	}
 
 	@Override
-	public void showSave(SaveSlot[] slots) {
-		savePanel.setSlots(slots);
-		cardLayout.show(getContentPane(), "save");
+	public void showSaveConfirmation() {
+		cardLayout.show(getContentPane(), "saveConfirmation");
 	}
 
 	@Override
@@ -124,6 +137,12 @@ public class SwingView extends JFrame implements IView {
 	}
 
 	@Override
+	public void showLose(String name, String heroClass, int level) {
+		losePanel.setRecap(name, heroClass, level);
+		cardLayout.show(getContentPane(), "lose");
+	}
+
+	@Override
 	public void showLoot(Artifact current, Artifact loot) {
 		lootPanel.setLoot(current, loot);
 		cardLayout.show(getContentPane(), "loot");
@@ -132,5 +151,11 @@ public class SwingView extends JFrame implements IView {
 	@Override
 	public void refreshGame() {
 		if (gamePanel != null) gamePanel.refresh();
+	}
+
+	@Override
+	public void showSaveFailed(String message) {
+		saveFailedPanel.setMessage(message);
+		cardLayout.show(getContentPane(), "saveFailed");
 	}
 }

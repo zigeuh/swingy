@@ -9,9 +9,12 @@ import java.awt.*;
 
 public class MenuPanel extends JPanel {
 
+	private final Controller controller;
 	private final SlotListPanel slotList;
+	private final JLabel warning;
 
 	public MenuPanel(Controller controller) {
+		this.controller = controller;
 		setBackground(Color.BLACK);
 		setLayout(new BorderLayout());
 
@@ -26,6 +29,11 @@ public class MenuPanel extends JPanel {
 
 		JButton delete = CustomComponent.createButton("Delete", controller::deleteMenu);
 		header.add(delete, BorderLayout.EAST);
+
+		warning = new JLabel("", SwingConstants.CENTER);
+		warning.setForeground(Color.ORANGE);
+		warning.setVisible(false);
+		header.add(warning, BorderLayout.SOUTH);
 
 		add(header, BorderLayout.NORTH);
 
@@ -43,5 +51,11 @@ public class MenuPanel extends JPanel {
 
 	public void setSlots(SaveSlot[] saves) {
 		slotList.setSlots(saves);
+		if (!controller.isPersistenceAvailable()) {
+			warning.setText("Saving unavailable, session will not be persisted.");
+			warning.setVisible(true);
+		} else {
+			warning.setVisible(false);
+		}
 	}
 }

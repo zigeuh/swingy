@@ -16,7 +16,7 @@ public class PausePanel extends JPanel {
 		JLabel title = new JLabel("Pause");
 
 		JButton resume = CustomComponent.createButton("Resume", controller::resume);
-		JButton save = CustomComponent.createButton("Save", controller::saveMenu);
+		JButton save = CustomComponent.createButton("Save", controller::saveGame);
 		JButton backToMenu = CustomComponent.createButton("Return to main-menu", controller::backToMenu);
 
 		title.setHorizontalAlignment(SwingConstants.CENTER);

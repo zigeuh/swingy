@@ -39,9 +39,7 @@ public class Battle {
 			if (heroHp <= 0) {
 				return new BattleResult(false, rounds, null, 0, 0);
 			}
-
 			round++;
-			if (round > 100) throw new IllegalStateException("Battle lasting over 100 rounds");
 		}
 	}
 }

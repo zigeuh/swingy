@@ -16,14 +16,14 @@ public class Hero {
 	private final HeroClass heroClass;
 
 	private int hp;
-	private int level = 0;
-	private int xp = 0;
+	private int level;
+	private int xp;
 	private Artifact weapon;
 	private Artifact armor;
 	private Artifact helm;
 
 	public Hero(String name, HeroClass heroClass) {
-		this(name, heroClass, 0, 0, heroClass == null ? 0 : heroClass.getBaseHp(), null, null, null);
+		this(name, heroClass, 1, 0, heroClass == null ? 0 : heroClass.getBaseHp(), null, null, null);
 	}
 
 	public Hero(String name, HeroClass heroClass, int level, int xp, int currentHp, Artifact weapon, Artifact armor, Artifact helm) {
@@ -125,7 +125,7 @@ public class Hero {
 	}
 
 	public int getRequiredXp() {
-		return XpTable.requiredFor(level + 1);
+		return XpTable.requiredFor(level);
 	}
 
 	public int getMaxHp() {

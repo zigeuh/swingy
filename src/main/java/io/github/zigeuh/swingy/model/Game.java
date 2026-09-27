@@ -9,6 +9,7 @@ public class Game {
 
 	private final Hero hero;
 	private Map map;
+	private Coordinates previous;
 	private Direction facing = Direction.SOUTH;
 	private final Random random = new Random();
 
@@ -32,7 +33,14 @@ public class Game {
 	}
 
 	public boolean tryEscape() {
-		return random.nextDouble() >= 0.5;
+		double rand =  random.nextDouble();
+
+		if (rand >= 0.5) {
+			map.setHeroPos(previous);
+			return true;
+		}
+
+		return false;
 	}
 
 	public Map getMap() {
@@ -58,6 +66,7 @@ public class Game {
 		if (targetX >= grid.length || targetX < 0 || targetY >= grid.length || targetY < 0)
 			return new MoveResult(true, null);
 
+		previous = currentPos;
 		map.setHeroPos(targetX, targetY);
 
 		Enemy target = grid[targetY][targetX];

@@ -52,6 +52,10 @@ public class Map {
 		grid[c.y()][c.x()] = null;
 	}
 
+	public void setHeroPos(Coordinates coordinates) {
+		heroPos = coordinates;
+	}
+
 	public void setHeroPos(int x, int y) {
 		heroPos = new Coordinates(x, y);
 	}
